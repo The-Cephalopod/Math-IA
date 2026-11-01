@@ -2,7 +2,7 @@
 #counter(page).update(1) 
 #set page(numbering: "1", number-align: top+right, margin: 2.5cm)
 
-It is well known from qualitative experience that sailboats can move forward even while travelling into the wind. Sailboats can be broken down into 2 primary rigid components: the sail and the centerboard. We can think of these components as foils. An example of the cross-section of a foil is shown in _fig. 2_. The perspective shown by _fig. 2_ is representative of a top-down view of a sail, or centerboard.
+It is well known from qualitative experience that sailboats can move forward even while travelling into the wind. Sailboats can be broken down into 2 primary rigid components: the sail and the daggerboard. We can think of these components as foils. An example of the cross-section of a foil is shown in _fig. 2_. The perspective shown by _fig. 2_ is representative of a top-down view of a sail, or daggerboard.
 
 #image("../Resources/betterairfoildiagram.png")
 
@@ -12,7 +12,7 @@ For the purposes of this paper, we will assume fluids are "perfect" in that they
 
 The end goal of this paper is to be able to calculate the sectional lift coefficient of an ILCA 7 sail using the formula
 
-$ C_L = L'/(1/2 rho U^2_infinity c) $
+$ C_L = L'/(1/2 rho U^2_infinity c) $ <cl-definition>
 #align(center,
 table(
   align: center,
@@ -182,7 +182,7 @@ $ f'(z_0) = lim_(z->z_0) (f(z)-f(z_0))/(z-z_0) $
 
 Let $Delta z = z-z_0$
 
-$ f'(z_0) = lim_(Delta z->0) (f(z_0+Delta z)-f(z_0))/(Delta z) $
+$ f'(z_0) = lim_(Delta z->0) (f(z_0+Delta z)-f(z_0))/(Delta z) $ <derivative>
 
 If we drop the subscript from $z_0$ and let $Delta w = f(z_0+Delta z)-f(z_0)$, then $Delta w$ denotes a change in $f(z)$ corresponding to a change in $Delta z$ at the point at which $f$ is evaluated [11]. Therefore:
 

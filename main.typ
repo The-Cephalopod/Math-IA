@@ -5,5 +5,5 @@
 #pagebreak()
 #include "Sections/intro.typ"
 #pagebreak()
-#include "Sections/part1.typ"
+#include "Sections/v2p1.typ"
 #bibliography("Resources/Math IA.bib", style: "ieee", full: true)
