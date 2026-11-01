@@ -194,542 +194,552 @@ You might notice that the derivative (49) for a complex-valued function is ident
 
 Other than this difference, the definition in (49) means that complex numbers can be differentiated using the same rules applied to real numbers. 
 
-An important requirement is that this limit must be the same along every approach to zero in the plane. For example, $f(z)=z^2$ gives the quotient $2z_0+Delta z$, which tends to $2z_0$ along every path. In contrast, for $f(z)=overline(z)$, the quotient is $overline(Delta z)/(Delta z)$. It is $1$ for real increments and $-1$ for purely imaginary increments, so this function has no complex derivative. Having two real coordinate functions is therefore not enough @Campuzano2019Complex.
+Complex derivatives are a bit different from real derivatives in that they can be approached from any point on the complex plane (not just by the direction of the function being derivated). An important requirement is that the difference quotient approaches the same value regardless of the direction from which $Delta z$ approaches zero. To see this, let's consider $f(z)=z^2$. Substituting into @derivative gives:
 
-The particular transformation I use is
+$ f'(z_0)=lim_(Delta z->0) ((z_0+Delta z)^2-z_0^2)/(Delta z) $
+$ f'(z_0)=lim_(Delta z->0)(2z_0+Delta z)=2z_0 $
 
-$ zeta=f(z)=z+a^2/z, quad a>0, quad z!=0. $ <joukowski>
+Since $Delta z$ approaches zero along every path, this derivative exists. However, this is not true for every complex function @Campuzano2019Complex.
 
-Here $a$ is a length scale, so both terms have units of length. To turn this rule into coordinate equations, I multiply $1/(x+i y)$ by $(x-i y)/(x-i y)$ to obtain real and imaginary parts:
+Now that we have defined complex differentiation, we can apply it to the transformation that will create our airfoil. For this, I will use the Joukowski transformation:
 
-$ zeta=x+i y+(a^2(x-i y))/(x^2+y^2), \
-  xi=x(1+a^2/(x^2+y^2)), quad
-  eta=y(1-a^2/(x^2+y^2)). $ <mapped-coordinates>
+$ zeta=f(z)=z+a^2/z, quad a>0, quad z!=0 $ <joukowski>
 
-Differentiating $f(z)$ gives:
+Here, $a$ is a constant which determines the scale of the airfoil. From this point, we will write the original complex coordinate as $z=x+i y$, so that $a$ is no longer being used as its real part. The transformed coordinate remains $zeta=xi+i eta$.
 
-$ f'(z)=1-a^2/z^2, quad f''(z)=2a^2/z^3. $ <map-derivatives>
+To find the coordinates of the transformed point, we can multiply the numerator and denominator of $1/z$ by $x-i y$:
 
-At $z=0$ the function is undefined; this is a singularity. At $z=plus.minus a$ it is defined but $f'(z)=0$; these are critical points. For the airfoils considered here, I will use $h<0$ and
+$ zeta=x+i y+(a^2 (x-i y))/(x^2+y^2) $
+$ xi=x(1+a^2/(x^2+y^2)), quad eta=y(1-a^2/(x^2+y^2)) $ <mapped-coordinates>
 
-$ R=|a-z_0|=sqrt((a-h)^2+k^2). $ <circle-radius>
+Differentiating @joukowski gives:
 
-The circle therefore passes through $z=a$, which maps to $zeta=2a$. The other critical point and the singularity lie strictly inside the circle because
+$ f'(z)=1-a^2/z^2 $ <map-derivative>
 
-$ R^2-|-a-z_0|^2=-4a h>0, quad
-  R^2-|z_0|^2=a^2-2a h>0. $
+We previously established that a conformal map must have a nonzero derivative. Here, $f'(z)=0$ at $z=a$ and $z=-a$, while $f(z)$ is undefined at $z=0$. We must therefore choose our circle so that these points do not lie in the surrounding fluid.
 
-A point is inside a circle when its distance to the centre is less than the radius. These inequalities therefore place both problematic points outside the fluid region, which consists only of the circle's exterior.
+Recall that our circle has centre $z_0=h+i k$ and radius $R$. I will choose $h<0$ and make the circle pass through $z=a$. Its radius is therefore the distance between $z_0$ and $a$:
 
-For a numerical example, I will use $h/a=-0.05$ and $k/a=0.10$. The horizontal offset gives this profile a rounded nose and small finite thickness; the vertical offset gives it camber. I express all geometric lengths in units of $a$. These ratios define an illustrative shape rather than a fit to an actual sail.
+$ R=|a-z_0|=sqrt((a-h)^2+k^2) $ <circle-radius>
 
+This point maps to $f(a)=2a$, forming the airfoil's sharp trailing edge @Campuzano2019Complex. The other two points lie inside the circle, since:
+
+$ R^2-|-a-z_0|^2=(a-h)^2-(-a-h)^2=-4a h>0 $
+$ R^2-|z_0|^2=(a-h)^2-h^2=a^2-2a h>0 $
+
+In each case, the distance from the centre is less than $R$. Therefore, the map is conformal throughout the fluid outside the circle, with the trailing edge treated separately.
+
+For the example in this paper, I will use $h/a=-0.05$ and $k/a=0.10$. The horizontal displacement gives the mapped shape thickness, while the vertical displacement bends the line midway between its upper and lower surfaces. This curvature is called camber. These values give us an idealized section to investigate; they have not been measured from an ILCA 7 sail.
+
+#counter(figure.where(kind: image)).update(2)
 #figure(
   image("../Resources/joukowski_section.svg", width: 100%),
-  caption: [The generating circle and mapped section in their respective planes. The chord is shown on the section.],
+  caption: [The circle and its image under the Joukowski transformation.],
 ) <geometry-plot>
 
-The chord must be measured from the mapped profile. For this rounded-nose family, the leading edge $zeta_L$ is the point farthest from the trailing edge $zeta_T=2a$. Therefore,  $g(t)=f(z(t))=xi(t)+i eta(t)$. Maximizing the distance is equivalent to maximizing its square, since squaring preserves the order of nonnegative numbers. Thus I maximize
+To calculate $C_L$, we will need the chord length $c$. The chord is the straight line joining the leading and trailing edges. Let $zeta_T=2a$ be the trailing edge. For this profile, I will locate the leading edge, $zeta_L$, by finding the boundary point farthest from $zeta_T$.
 
-$ H(t)=|g(t)-2a|^2=(xi(t)-2a)^2+eta(t)^2. $
+Let $g(t)=f(z(t))=xi(t)+i eta(t)$ describe the mapped boundary, where $z(t)$ is the circle defined in @circle. The square of the distance from $g(t)$ to the trailing edge is:
 
-This reduces the geometric problem to familiar single-variable optimization. The chain and product rules give
+$ H(t)=|g(t)-2a|^2=(xi(t)-2a)^2+eta(t)^2 $
 
-$ H'(t)=2(xi(t)-2a)xi'(t)+2eta(t)eta'(t). $
+Since distance is nonnegative, maximizing its square gives the same point as maximizing the distance itself. This also removes the square root before we differentiate:
 
-The same derivative can be written compactly in complex notation. Multiplying $(xi-2a-i eta)(xi'+i eta')$ shows that its real part is exactly $(xi-2a)xi'+eta eta'$. Also, differentiating @circle gives $z'(t)=i R e^(i t)$. Therefore the stationary-point condition is
+$ H'(t)=2(xi(t)-2a)xi'(t)+2eta(t)eta'(t) $ <nose-condition>
 
-$ H'(t)=2 op("Re")[overline(g(t)-2a)g'(t)]=0, quad
-  g'(t)=f'(z(t))i R e^(i t). $ <nose-condition>
+The coordinate derivatives come from the chain rule:
 
-Numerically, I sample the interval $0<=t<=2pi$ to locate the largest values of $H$, then refine the root of $H'$ near that region and compare it with the other stationary points. The maximum is near $t=pi$; the trailing edge instead gives the zero-distance minimum. With
+$ g'(t)=f'(z(t))z'(t)=(1-a^2/(z(t)^2))i R e^(i t) $
 
-$ c=|zeta_T-zeta_L|, quad delta=arg(zeta_T-zeta_L), $
+Here, $xi'(t)$ and $eta'(t)$ are the real and imaginary parts of $g'(t)$. Solving $H'(t)=0$ numerically over $0<=t<=2pi$ and comparing the values of $H$ gives the maximum at $t approx 3.226974$. We can then calculate the chord length and its angle $delta$ to the positive $xi$-axis:
 
-the chord length and its angle to the $xi$-axis are fixed. Numerical evaluation gives
+$ c=|zeta_T-zeta_L|, quad delta=arg(zeta_T-zeta_L) $
 
-$ R/a approx 1.054751, quad zeta_L/a approx -2.009174+0.001759i, \
-  c/a approx 4.009174, quad delta approx -0.000438784. $ <geometry-values>
+For the chosen circle:
 
-All angles are in radians unless a degree symbol is shown. The chord tilt is only about $-0.02514 degree$, but retaining it avoids treating the coordinate axis as the chord. I define $chi$ as the direction of the free-stream velocity relative to the positive $xi$-axis and choose the signed angle of attack so that
+$ R/a approx 1.054751, quad zeta_L/a approx -2.009174+0.001759i $
+$ c/a approx 4.009174, quad delta approx -0.000438784 $ <geometry-values>
 
-$ alpha=chi-delta, quad chi=alpha+delta. $ <incidence>
+We must also define the angle at which the air flows towards the section. Let $chi$ be the angle of the undisturbed air velocity to the positive $xi$-axis. I will define the angle of attack, $alpha$, as the signed angle from the chord to this velocity direction. Therefore:
 
-This fixes the sign convention used in the later circulation and lift calculations.
+$ alpha=chi-delta, quad chi=alpha+delta $ <incidence>
 
-Now that the geometry is defined, I need a flow which passes around it. I will construct the flow around the circle first, then transfer it to the airfoil. This requires extending the differentiation and integration from Mathematics AA HL to quantities that depend on two coordinates.
+All angles will be in radians unless a degree symbol is shown.
 
-At a point $(x,y)$ in the circle plane, write the air velocity as $bold(V)_z(x,y)=(u_z(x,y),v_z(x,y))$. Such an assignment of a vector to each point is called a *vector field*. The subscript $z$ identifies the circle plane; it does not indicate differentiation. Steady flow means this field does not change with time at a fixed position. Its value can still change from one position to another.
+Now that we have defined the airfoil, we must describe the flow around it. I will begin with the flow around the circle, since its boundary is simpler, and then use the same transformation to obtain the flow around the airfoil.
 
-For a function of one variable, its derivative measures the change in its output when its input changes. If a scalar function $S(x,y)$ has two inputs, I can first hold $y$ fixed and change only $x$. This defines the *partial derivative*
+Let $u_z (x,y)$ and $v_z (x,y)$ be the horizontal and vertical components of velocity in the circle plane. Together, these form the velocity vector $bold(V)_z=(u_z,v_z)$. The subscript $z$ identifies the plane in which we are working.
 
-$ S_x(x,y)=frac(partial S,partial x)
-  =lim_(epsilon->0)frac(S(x+epsilon,y)-S(x,y),epsilon). $ <partial-x>
+Since the velocity depends on both $x$ and $y$, we need a way to differentiate a function of two variables. We can do this by holding one variable constant while differentiating with respect to the other. This is called partial differentiation. For a function $S(x,y)$:
 
-Similarly, holding $x$ fixed gives
+$ S_x=frac(partial S,partial x)=lim_(epsilon->0)(S(x+epsilon,y)-S(x,y))/epsilon $
+$ S_y=frac(partial S,partial y)=lim_(epsilon->0)(S(x,y+epsilon)-S(x,y))/epsilon $
 
-$ S_y(x,y)=frac(partial S,partial y)
-  =lim_(epsilon->0)frac(S(x,y+epsilon)-S(x,y),epsilon). $ <partial-y>
+For example, if $S(x,y)=x^2 y$, then $S_x=2x y$ and $S_y=x^2$. The subscript tells us which variable changes. Similarly, $S_(x x)$ means differentiating twice with respect to $x$, and $S_(x y)$ means differentiating first with respect to $x$ and then with respect to $y$. The two mixed derivatives, $S_(x y)$ and $S_(y x)$, are equal when these second derivatives are continuous, as they will be for the functions used in the fluid region below.
 
-Thus the symbol $partial$ records which input is varying; the actual calculation uses ordinary differentiation. For a dimensionless example, let $S(x,y)=x^2 y+3y^2$. Treating $y$ as a constant gives $S_x=2x y$, whereas treating $x$ as a constant gives $S_y=x^2+6y$. At $(1,2)$ these are $4$ and $13$: the rate of change depends on the direction in which I move. These definitions extend single-variable differentiation to functions of several variables.
+We can now express our flow assumptions mathematically. Since the fluid is incompressible, the volume entering a small rectangle must equal the volume leaving it. For a rectangle of width $Delta x$ and height $Delta y$, the net outward flow through its vertical sides is approximately:
 
-I can differentiate again. The notation $S_(x x)=partial^2 S/partial x^2$ means differentiating twice with respect to $x$; it does not mean squaring $S_x$. For the example, $S_(x x)=2y$ and $S_(y y)=6$. A *mixed derivative* changes the variable between the two differentiations: differentiating $S_x$ with respect to $y$ gives $2x$, as does differentiating $S_y$ with respect to $x$. These two orders agree when the second partial derivatives are continuous near the point. The functions used below have this smoothness everywhere in the fluid region where they are evaluated.
+$ [u_z (x+Delta x,y)-u_z (x,y)]Delta y
+  approx frac(partial u_z,partial x)Delta x Delta y $
 
-When both inputs change, their first-order contributions add:
+The horizontal sides similarly contribute $(partial v_z/partial y)Delta x Delta y$. Adding these contributions, dividing by the rectangle's area, and letting its dimensions approach zero gives:
 
-$ Delta S approx S_x Delta x+S_y Delta y. $
+$ frac(partial u_z,partial x)+frac(partial v_z,partial y)=0 $ <incompressibility>
 
-This follows by splitting the movement into an $x$-step and a $y$-step and using the one-variable tangent approximation on each. Continuity of the partial derivatives makes the error small compared with the total displacement as the steps shrink. The corresponding *total differential* is
+I will also assume that the flow is irrotational, meaning that a small fluid element has no net rotation about its own centre. This is an additional assumption to those stated at the beginning. Mathematically, it requires:
 
-$ d S=S_x d x+S_y d y. $ <total-differential>
+$ frac(partial v_z,partial x)-frac(partial u_z,partial y)=0 $ <irrotationality>
 
-If a curve is parameterized by $(x(t),y(t))$, both coordinates now depend on the single variable $t$. Substituting $d x=x'(t)d t$ and $d y=y'(t)d t$ gives the chain rule along that curve:
+The difference on the left is called vorticity. The first term measures the turning of a small horizontal segment, while the negative of the second measures the turning of a small vertical segment. Their average gives the rotation of the fluid element. Thus, zero vorticity allows the fluid to follow a curved path without the element itself rotating. @Olver2024Complex
 
-$ frac(d S(x(t),y(t)),d t)=S_x x'(t)+S_y y'(t). $ <two-variable-chain>
+To construct a flow with this property, let $phi(x,y)$ be a function whose partial derivatives give the velocity components:
 
-The two terms represent the two ways that changing $t$ changes $S$. This is the multivariable version of the chain rule. For example, on $(x(t),y(t))=(t,2t)$, the previous function becomes $S=2t^3+12t^2$. Direct differentiation gives $6t^2+24t$. The right side of @two-variable-chain gives $(4t^2)(1)+(t^2+12t)(2)$, the same result.
+$ u_z=phi_x, quad v_z=phi_y $ <velocity-potential>
 
-Incompressibility means that a small fixed region cannot continually lose or gain fluid volume. Consider a rectangle of width $Delta x$ and height $Delta y$, per unit span. Its approximate net outward flow through its left and right sides is
+This function is called the velocity potential. We can think of it as an antiderivative for the velocity: differentiating it in the horizontal or vertical direction recovers the corresponding component. Substituting these expressions into @irrotationality gives $phi_(y x)-phi_(x y)=0$, so the flow is irrotational. Substituting them into @incompressibility gives:
 
-$ [u_z(x+Delta x,y)-u_z(x,y)]Delta y
-  approx frac(partial u_z,partial x)Delta x Delta y. $
+$ phi_(x x)+phi_(y y)=0 $ <laplace>
 
-The top and bottom sides similarly contribute $(partial v_z/partial y)Delta x Delta y$. Dividing their sum by the area and letting the rectangle shrink gives
+This is Laplace's equation. We therefore need a velocity potential which satisfies this equation and prevents the fluid from passing through the circle.
 
-$ frac(partial u_z,partial x)+frac(partial v_z,partial y)=0. $ <incompressibility>
+To express the second requirement, we will use a stream function, $psi(x,y)$, defined by:
 
-The expression on the left is the two-dimensional *divergence*: it measures local net outflow per unit area. Its zero value expresses conservation of fluid in this model.
+$ psi_x=-v_z, quad psi_y=u_z $ <stream-definition>
 
-The other assumption, irrotationality, concerns local turning, rather than net outflow. A small horizontal material segment has an angular turning rate approximately $partial v_z/partial x$; a small vertical segment has an angular turning rate approximately $-partial u_z/partial y$. Their average describes the local rotation of a small fluid element. Thus the quantity
+A streamline is a curve which follows the direction of the velocity at every point. To see how $psi$ describes these curves, consider a small displacement $(d x,d y)$. For a differentiable function of two variables, its change is the sum of the changes due to each coordinate:
 
-$ omega=frac(partial v_z,partial x)-frac(partial u_z,partial y) $ <vorticity>
+$ d psi=psi_x d x+psi_y d y=-v_z d x+u_z d y $ <stream-differential>
 
-is twice this angular rate and is called the two-dimensional *vorticity*, or the out-of-plane component of curl. Irrotational flow has $omega=0$. Curved particle paths alone do not imply nonzero vorticity: this condition describes the rotation of a small element about itself.
+Along a streamline, $(d x,d y)$ is proportional to $(u_z,v_z)$, so the two terms cancel. Therefore, $d psi=0$, meaning that $psi$ is constant along a streamline. If we make $psi$ constant on the circle, the velocity will follow its boundary and no fluid will pass through it.
 
-To construct such a field, I seek a real-valued *velocity potential* $phi(x,y)$ satisfying
+We now have two functions describing the same flow. We can combine them into a single complex function:
 
-$ u_z=phi_x, quad v_z=phi_y. $ <velocity-potential>
+$ W(z)=phi(x,y)+i psi(x,y) $
 
-The vector $(phi_x,phi_y)$ is called the *gradient* of $phi$. The potential has units $"m"^2 "s"^(-1)$, so its spatial derivatives have velocity units. It generalizes the idea of finding an antiderivative: instead of one derivative recovering one function, two partial derivatives recover the two velocity components. It is not the pressure or the speed itself. Adding a constant to $phi$ leaves the velocities unchanged.
+This is called the complex potential. To find its derivative, we can approach a point horizontally or vertically. The horizontal approach gives $W'=phi_x+i psi_x$, while the vertical approach gives:
 
-This construction guarantees irrotationality because $partial v_z/partial x=partial phi_y/partial x$ and $partial u_z/partial y=partial phi_x/partial y$ are equal mixed derivatives. A sufficiently smooth irrotational field has such a potential locally; I will explicitly construct one, rather than rely on a global existence claim. Substituting @velocity-potential into @incompressibility gives
+$ W'=(phi_y+i psi_y)/i=psi_y-i phi_y $
 
-$ frac(partial^2 phi,partial x^2)+frac(partial^2 phi,partial y^2)=0. $ <laplace>
+For these expressions to agree, their real and imaginary parts must be equal:
 
-This is *Laplace's equation*. It is a partial differential equation: an equation specifying how an unknown function's partial derivatives are related. A function satisfying it is called *harmonic*. Its importance here is that its solutions can be added. If $phi_1$ and $phi_2$ satisfy @laplace, then for constants $A$ and $B$,
+$ phi_x=psi_y, quad phi_y=-psi_x $ <cauchy-riemann>
 
-$ frac(partial^2(A phi_1+B phi_2),partial x^2)+frac(partial^2(A phi_1+B phi_2),partial y^2) \
-  =A(frac(partial^2 phi_1,partial x^2)+frac(partial^2 phi_1,partial y^2))
-  +B(frac(partial^2 phi_2,partial x^2)+frac(partial^2 phi_2,partial y^2))=0. $
+These are the Cauchy-Riemann equations. They are satisfied by our definitions of $phi$ and $psi$. With continuous partial derivatives, they also make the derivative agree in every other direction, since:
 
-This property is called *linearity*. It lets me build the required flow from simpler flows, while still checking that their sum satisfies the required boundary conditions.
+$ d W=(phi_x+i psi_x)d x+(phi_y+i psi_y)d y $
+$ d W=(phi_x+i psi_x)(d x+i d y)=(phi_x+i psi_x)d z $
 
-A *streamline* is a curve whose tangent follows the local velocity. To describe these curves, I introduce a second real function, the *stream function* $psi$, defined by
+Dividing by $d z$, or equivalently taking the limit of the corresponding difference quotient, gives:
 
-$ psi_x=-v_z, quad psi_y=u_z. $ <stream-definition>
+$ W'(z)=phi_x+i psi_x=u_z-i v_z $ <complex-velocity>
 
-These assignments are compatible with equality of mixed derivatives precisely when @incompressibility holds. On a small region they therefore define $psi$ up to an additive constant. Its units, like those of $phi$, are $"m"^2 "s"^(-1)$. Applying @total-differential gives
+This is the connection we need: differentiating one complex function gives both components of the fluid velocity. Its real part is the horizontal component, and the negative of its imaginary part is the vertical component. Also, differentiating @cauchy-riemann gives $phi_(x x)+phi_(y y)=psi_(y x)-psi_(x y)=0$, so an analytic complex potential satisfies Laplace's equation.
 
-$ d psi=-v_z d x+u_z d y. $ <stream-differential>
+To construct this potential, let $w=z-z_0$. This measures position relative to the centre of the circle, so its boundary is $|w|=R$. Far from the circle, the air should have speed $U_infinity$ and direction $chi$. Its velocity components are therefore $U_infinity cos chi$ and $U_infinity sin chi$. Using @complex-velocity and Euler's formula:
 
-Along a streamline, the displacement $(d x,d y)$ is proportional to $(u_z,v_z)$, so the two terms cancel and $d psi=0$. Therefore $psi$ stays constant along a streamline. Conversely, a regular curve of constant $psi$ has its tangent parallel to the velocity. Making the circle boundary a curve of constant $psi$ will consequently prevent fluid from crossing it. A zero-velocity point also satisfies this no-penetration requirement.
+$ W'_"uniform"=U_infinity cos chi-i U_infinity sin chi=U_infinity e^(-i chi) $
 
-I now combine the two real functions into one complex function:
+Integrating gives $W_"uniform"=U_infinity e^(-i chi)w$. However, this uniform flow would pass through the circle. We must add a term which changes the flow near the boundary while having a diminishing effect farther away.
 
-$ W(z)=phi(x,y)+i psi(x,y), quad z=x+i y. $
+For this, let's consider $A/w$, where $A$ is a complex constant. Its derivative is $-A/w^2$, so its contribution to the velocity approaches zero as $|w|$ increases. The combined potential is:
 
-This is the *complex potential*. To see why it is complex differentiable, first approach a point horizontally in the derivative's difference quotient. This gives $W'=phi_x+i psi_x$. Approaching vertically instead, the denominator is $i Delta y$, giving
+$ W_0=U_infinity e^(-i chi)w+A/w $
 
-$ W'=frac(phi_y+i psi_y,i)=psi_y-i phi_y. $
+On the circle, $w=R e^(i theta)$, where $theta$ is the angle measured about the circle's centre. Substituting:
 
-For these expressions to agree, the real and imaginary parts must agree:
+$ W_0=U_infinity R e^(i(theta-chi))+(A/R)e^(-i theta) $
 
-$ phi_x=psi_y, quad phi_y=-psi_x. $ <cauchy-riemann>
+We want the imaginary part, $psi$, to be constant on this boundary. Choosing $A=U_infinity R^2 e^(i chi)$ makes the two terms complex conjugates:
 
-These are the *Cauchy-Riemann equations*, already satisfied by @velocity-potential and @stream-definition. Checking just two directions would not prove that every direction works. Here the continuous partial derivatives supply that additional step: using @cauchy-riemann, the first-order change is
+$ W_0=U_infinity R[e^(i(theta-chi))+e^(-i(theta-chi))] $
+$ W_0=2U_infinity R cos(theta-chi) $
 
-$ d W=(phi_x+i psi_x)d x+(phi_y+i psi_y)d y \
-  =(phi_x+i psi_x)(d x+i d y). $
+This is real, so $psi=0$ everywhere on the circle. Therefore:
 
-Dividing by $d z=d x+i d y$ gives the same derivative for any small displacement. The error tends to zero in the difference quotient, so $W$ is locally analytic. The connection between complex potentials and planar flow is developed in Olver's notes. @Olver2024Complex In particular,
+$ W_0 (z)=U_infinity (e^(-i chi)w+(R^2 e^(i chi))/w) $ <circle-potential>
 
-$ W'(z)=phi_x+i psi_x=u_z-i v_z. $ <complex-velocity>
+The reciprocal term is called a doublet. Together, these two terms give the required velocity far away and prevent flow through the circle. @Campuzano2019Complex
 
-Thus a complex derivative stores two real velocities. The minus sign is essential: the vertical velocity is the negative of the imaginary part of $W'$. Its modulus is the speed, $|W'|=sqrt(u_z^2+v_z^2)$. The imaginary unit provides a compact representation; the physical velocities remain real.
+There is still another way to change the flow without violating either requirement: we can add a velocity which moves tangentially around the circle and decreases with distance. To describe this contribution, we must first define circulation.
 
-Let $w=z-z_0$, so the boundary is $|w|=R$. Far away, the required constant velocity components are $U_infinity cos chi$ and $U_infinity sin chi$. By @complex-velocity the derivative of a suitable potential is therefore
+Circulation measures the velocity accumulated along a closed path. Consider a path $C$ parameterized by $(x(t),y(t))$, where $t_0<=t<=t_1$. For a small displacement $(d x,d y)$, the dot product $u_z d x+v_z d y$ measures the contribution of velocity along that displacement. Adding these contributions around the path gives a line integral:
 
-$ U_infinity cos chi-i U_infinity sin chi=U_infinity e^(-i chi). $
+$ integral.cont_C (u_z d x+v_z d y)
+  =integral_(t_0)^(t_1)[u_z x'(t)+v_z y'(t)]d t $ <line-integral>
 
-Integrating with respect to $w$ gives $U_infinity e^(-i chi)w$, up to an irrelevant constant. This represents uniform flow, but by itself it passes through the circle. I need an additional analytic term that redirects flow near the circle while its velocity contribution tends to zero far away.
+The circle on the integral sign means that the path is closed. The right side shows how we calculate it using an ordinary definite integral. I will take $C$ counterclockwise and define clockwise circulation as positive:
 
-I try $A/w$, where $A$ is a complex constant to be chosen. Its derivative is $-A/w^2$, whose magnitude decreases as $1/|w|^2$. Such a reciprocal-potential contribution is called a *doublet*. For this exploration its role can be verified directly from the boundary, without introducing the source-and-sink construction sometimes used to obtain it. With
+$ Gamma=-integral.cont_C (u_z d x+v_z d y) $ <circulation>
 
-$ W_0=U_infinity e^(-i chi)w+A/w, $
+The potential in @circle-potential has zero circulation. This follows because $u_z d x+v_z d y=d phi$, and its potential returns to the same value after one complete circuit.
 
-substitution of $w=R e^(i theta)$ gives
+Now let $r=|w|$ be the distance from the centre and let $V_theta$ be an additional velocity component in the counterclockwise tangential direction. Choosing:
 
-$ W_0=U_infinity R e^(i(theta-chi))+(A/R)e^(-i theta). $
+$ V_theta=-Gamma/(2pi r) $
 
-Choosing $A=U_infinity R^2 e^(i chi)$ makes the second term the complex conjugate of the first. Their sum is $2U_infinity R cos(theta-chi)$, which is real. Its imaginary part, $psi$, is consequently zero at every boundary point. The resulting potential is
+gives the required circulation, since a circle of radius $r$ has arc-length element $d s=r d theta$, and hence:
 
-$ W_0(z)=U_infinity(e^(-i chi)w+(R^2 e^(i chi))/w). $ <circle-potential>
+$ -integral_0^(2pi)V_theta r d theta
+  =Gamma/(2pi)integral_0^(2pi)d theta=Gamma $
 
-It satisfies both requirements: no flow through the circle and the specified uniform flow at large distance. The singularity at $w=0$ lies inside the excluded obstacle. This is a particular case of the circle theorem, but the boundary calculation above verifies the case I need directly. @Campuzano2019Complex
+The counterclockwise unit tangent is $(-sin theta,cos theta)$. Therefore, the horizontal and vertical components of this added flow are:
 
-An integral $integral_b^d F(t)d t$ can be understood as the limit of sums $sum_j F(t_j^*)Delta t_j$ as the subinterval widths approach zero. A *line integral* uses the same idea, but the small contributions are distributed along a curve. Here “line” includes curved paths.
+$ u_"vortex"=(Gamma sin theta)/(2pi r), quad
+  v_"vortex"=-(Gamma cos theta)/(2pi r) $
 
-Let $C$ be parameterized by $bold(r)(t)=(x(t),y(t))$ for $t_0<=t<=t_1$. A small change $Delta t$ gives a displacement approximately $(x'(t),y'(t))Delta t$. By Pythagoras, its length is approximately $sqrt(x'(t)^2+y'(t)^2)Delta t$. In the limit, the arc-length element is
+Using @complex-velocity:
 
-$ d s=sqrt(x'(t)^2+y'(t)^2)d t. $ <arc-length-element>
+$ W'_"vortex"=u_"vortex"-i v_"vortex"
+  =(i Gamma e^(-i theta))/(2pi r)=(i Gamma)/(2pi w) $
 
-Consequently, adding a scalar quantity $B$ per unit length along the curve gives
+To integrate this expression, we need the complex equivalent of $ln$. Since $w/R=(r/R)e^(i theta)$, let:
 
-$ integral_C B d s
-  =integral_(t_0)^(t_1) B(x(t),y(t))sqrt(x'(t)^2+y'(t)^2)d t. $ <scalar-line-integral>
+$ op("Log")(w/R)=ln(r/R)+i theta $ <complex-logarithm>
 
-For example, $B=1$ gives the curve's length. For a circle $(x,y)=(h+R cos t,k+R sin t)$, the square root is $R$, so the integral is $integral_0^(2pi) R d t=2pi R$. This recovers the familiar circumference using ordinary integration.
+Exponentiating the right side returns $w/R$. Differentiating this inverse relationship gives:
 
-For circulation I need the velocity component *along* the curve. If $bold(T)$ is the unit tangent in the direction of travel, the dot product $bold(V)_z dot bold(T)$ gives that signed component. Since $bold(T)d s=d bold(r)$, the sum of these tangential contributions is
+$ e^(op("Log")(w/R)) d/(d w)op("Log")(w/R)=1/R $
+$ d/(d w)op("Log")(w/R)=1/w $
 
-$ integral_C bold(V)_z dot d bold(r)
-  =integral_C(u_z d x+v_z d y) \
-  =integral_(t_0)^(t_1)[u_z(x(t),y(t))x'(t)+v_z(x(t),y(t))y'(t)]d t. $ <vector-line-integral>
+Therefore, the additional potential is $(i Gamma/(2pi))op("Log")(w/R)$. This is called a vortex potential. Its velocity is tangential to the circle and approaches zero as $r$ increases. @Campuzano2019Complex
 
-This follows by taking the limit of the sums $sum_j(u_z Delta x_j+v_z Delta y_j)$. A vector line integral therefore reduces to a definite integral in the parameter. Unlike $integral_C B d s$, it changes sign when the direction around the curve is reversed. These are the scalar and vector forms of line integration.
+There is one difference from the real logarithm. After going once counterclockwise around the centre, $theta$ increases by $2pi$. The logarithm therefore increases by $2pi i$, and the real part of the vortex potential changes by $-Gamma$. This explains why the new potential can have nonzero circulation. Its derivative $1/w$ still has a unique value at every point outside the circle, so the velocity is well defined.
 
-If the path returns to its starting point, I use the closed-integral symbol $integral.cont_C$. The velocity integral around such a path is called *circulation*, with units $"m"^2 "s"^(-1)$. For consistency with positive lift later, I define $Gamma$ to be positive for clockwise circulation, while $C$ itself is traversed counterclockwise:
+Adding the vortex potential to @circle-potential gives:
 
-$ Gamma=-integral.cont_C(u_z d x+v_z d y). $ <circulation>
+$ W(z)=U_infinity (e^(-i chi)w+(R^2 e^(i chi))/w)
+  +(i Gamma)/(2pi)op("Log")(w/R) $ <full-potential>
 
-This minus sign is a convention, not an additional physical assumption. As a check, a uniform flow has zero circulation: its integral is $u_z integral.cont_C d x+v_z integral.cont_C d y=0$, since the net changes in both coordinates are zero. More generally, for a single-valued potential on the entire closed path, @two-variable-chain gives
+To check the boundary condition, we can substitute $w=r e^(i theta)$ and take the imaginary part:
 
-$ integral.cont_C(u_z d x+v_z d y)
-  =integral_(t_0)^(t_1)frac(d phi(x(t),y(t)),d t)d t \
-  =phi(x(t_1),y(t_1))-phi(x(t_0),y(t_0))=0. $
+$ psi(r,theta)=U_infinity (r-R^2/r)sin(theta-chi)
+  +Gamma/(2pi)ln(r/R) $ <stream-function>
 
-This is the fundamental theorem of calculus applied to the parameterized path. In particular, the uniform-plus-doublet potential @circle-potential has zero circulation.
+At $r=R$, both terms are zero. Therefore, the circle is still a streamline for any value of $Gamma$. We will determine which value is appropriate after mapping the flow to the airfoil.
 
-I can add a flow which moves tangentially around the circle. At distance $r=|w|$, consider the counterclockwise tangential velocity component $-Gamma/(2pi r)$. The minus sign makes the motion clockwise for positive $Gamma$. Because the counterclockwise unit tangent is $(-sin theta,cos theta)$, the Cartesian components of this additional field are
+To transfer the potential to the airfoil plane, we assign each point $zeta=f(z)$ the potential of its corresponding point $z$ outside the circle. Let $tilde(W)$ denote this transformed potential:
 
-$ u_"vortex"=frac(Gamma sin theta,2pi r), quad
-  v_"vortex"=-frac(Gamma cos theta,2pi r). $ <vortex-velocities>
+$ tilde(W)(zeta)=W(z), quad z=f^(-1)(zeta) $
 
-I can check its circulation on any circle of radius $r>R$. Here $d x=-r sin theta d theta$ and $d y=r cos theta d theta$, so
+Here, $f^(-1)$ means the inverse which returns a point outside the generating circle. The Joukowski map is one-to-one on this exterior region, so each fluid point has one corresponding point there. We can now use the chain rule to find the new velocity. Since $d zeta/d z=f'(z)$:
 
-$ integral.cont_C(u_"vortex" d x+v_"vortex" d y) \
-  =-frac(Gamma,2pi)integral_0^(2pi)(sin^2 theta+cos^2 theta)d theta=-Gamma. $
+$ (d tilde(W))/(d zeta)=(d W)/(d z)(d z)/(d zeta)=frac(W'(z),f'(z)) $
 
-It therefore contributes exactly the clockwise circulation required by @circulation, independent of the chosen radius. Also, @vortex-velocities gives
+Let $q(zeta)=u-i v$ be the complex velocity in the airfoil plane, where $u$ and $v$ are its horizontal and vertical components. Differentiating @full-potential and substituting @map-derivative gives:
 
-$ u_"vortex"-i v_"vortex"
-  =frac(i Gamma e^(-i theta),2pi r)=frac(i Gamma,2pi w). $
+$ q(zeta)=frac(U_infinity (e^(-i chi)-(R^2 e^(i chi))/w^2)+(i Gamma)/(2pi w),1-a^2/z^2) $ <mapped-velocity>
 
-The real antiderivative of $1/x$ suggests a logarithm. To use the exponential at a general complex input, I extend Euler's formula by defining $e^(X+i Y)=e^X(cos Y+i sin Y)$. The real and imaginary parts have derivatives $A_X=e^X cos Y=B_Y$ and $A_Y=-e^X sin Y=-B_X$. They therefore satisfy the Cauchy-Riemann equations, and the complex derivative is $A_X+i B_X=e^(X+i Y)$, just as for the real exponential. For a complex number $w/R=(r/R)e^(i theta)$, define a local complex logarithm by
+The division by $f'(z)$ accounts for the change in distances caused by the transformation. Where the map stretches a small displacement by $|f'(z)|$, the speed decreases by that factor. The boundary remains a streamline because the corresponding points still have $psi=0$.
 
-$ op("Log")(w/R)=ln(r/R)+i theta. $ <complex-logarithm>
+Circulation is also preserved. Multiplying the chain-rule equation by $d zeta$ gives $q d zeta=W'(z)d z$. Taking real parts:
 
-Exponentiating the right side returns $w/R$, so this is the complex counterpart of the inverse relationship between $ln$ and the exponential. Implicit differentiation of $e^(op("Log")(w/R))=w/R$ gives $(d/(d w))op("Log")(w/R)=1/w$. The required additional potential is therefore $(i Gamma/(2pi))op("Log")(w/R)$. This standard vortex potential is described by Campuzano; my clockwise convention gives the opposite sign to a counterclockwise-positive convention. @Campuzano2019Complex
+$ u d xi+v d eta=u_z d x+v_z d y $
 
-The word “local” matters. An angle can be written as $theta+2pi n$ for any integer $n$. A *branch* chooses a continuous value of the angle on a region which does not go all the way around the centre. After one counterclockwise circuit, a continuously followed angle increases by $2pi$, so the logarithm increases by $2pi i$. The derivative $1/w$, however, returns to the same value.
+Thus, integrating around corresponding closed paths gives the same $Gamma$ in both planes. Far from the section, $f'(z)$ approaches $1$, so the undisturbed velocity also remains unchanged.
 
-For the vortex term, the real and imaginary parts are $phi_"vortex"=-Gamma theta/(2pi)$ and $psi_"vortex"=Gamma ln(r/R)/(2pi)$. The potential thus changes by $-Gamma$ after a circuit; it is not a single-valued potential on the whole exterior. This is why the preceding zero-circulation argument does not apply. The velocity itself is single-valued and locally irrotational everywhere in the fluid. The excluded centre is essential: a loop surrounding the obstacle cannot be shrunk to a point while staying in the fluid.
+We can now determine $Gamma$ by considering the trailing edge. At its original point $z=a$, the denominator of @mapped-velocity is zero. If the numerator were nonzero, the model would predict an infinite speed there. To prevent this, we impose the Kutta condition: the flow must leave the sharp trailing edge smoothly with finite velocity. This is an additional physical condition used to select the circulation. @Darmofal2005Kutta
 
-Adding this term to @circle-potential gives
+We therefore require $W'(a)=0$. To evaluate this, let $beta$ describe the direction from the circle centre to $a$:
 
-$ W(z)=U_infinity(e^(-i chi)w+(R^2 e^(i chi))/w)
-  +frac(i Gamma,2pi)op("Log")(w/R). $ <full-potential>
+$ a-z_0=R e^(-i beta), quad beta=arctan(k/(a-h)) $ <beta>
 
-Taking the imaginary part after substituting $w=r e^(i theta)$ gives
+The negative sign in the exponential comes from $a-z_0=(a-h)-i k$. Also, $a-h>0$, so the inverse tangent gives the required angle. Substituting $w=R e^(-i beta)$ into $W'(z)$ gives:
 
-$ psi(r,theta)=U_infinity(r-R^2/r)sin(theta-chi)
-  +frac(Gamma,2pi)ln(r/R). $ <stream-function>
+$ W'(a)=U_infinity (e^(-i chi)-e^(i chi+2i beta))
+  +(i Gamma e^(i beta))/(2pi R) $
 
-At $r=R$, both terms are zero. The vortex velocity also tends to zero as $r$ increases. Thus every value of $Gamma$ satisfies the same no-penetration and far-field conditions. The vortex term describes the flow's circulation; it does not imply that the sail itself rotates. An additional physical condition will be needed to select $Gamma$.
+Factoring out $e^(i beta)$ from the exponential difference:
 
-The Joukowski map sends $z$ to $zeta=f(z)$. To assign a potential to a point $zeta$ outside the airfoil, I first find its corresponding exterior point $z=f^(-1)(zeta)$, then evaluate $W$ there:
+$ e^(-i chi)-e^(i chi+2i beta)
+  =e^(i beta)[e^(-i(chi+beta))-e^(i(chi+beta))] $
 
-$ tilde(W)(zeta)=W(f^(-1)(zeta)). $
+Using Euler's formula, the expression in square brackets equals $-2i sin(chi+beta)$. Therefore:
 
-The inverse here means the continuous exterior solution; the algebraic mapping need not have a unique inverse over the entire complex plane. Locally in the exterior, $f'(z)!=0$. The derivative of the inverse can be understood directly by reversing the difference quotient:
+$ W'(a)=i e^(i beta)[-2U_infinity sin(chi+beta)+Gamma/(2pi R)] $
 
-$ (Delta z)/(Delta zeta)
-  =frac(1,(f(z+Delta z)-f(z))/(Delta z))->1/f'(z). $
+Since $i e^(i beta)!=0$, setting $W'(a)=0$ gives:
 
-Here I follow the local exterior inverse, so $Delta zeta->0$ also gives $Delta z->0$. The nonzero derivative allows me to take the reciprocal limit. Thus $d z/d zeta=1/f'(z)$, the same inverse-derivative rule as in real calculus. Applying the chain rule to $W(z(zeta))$ then gives the mapped complex velocity
+$ -2U_infinity sin(chi+beta)+Gamma/(2pi R)=0 $
+$ Gamma=4pi R U_infinity sin(chi+beta) $
+$ Gamma=4pi R U_infinity sin(alpha+delta+beta) $ <selected-circulation>
 
-$ q(zeta)=u-i v=frac(d tilde(W),d zeta)
-  =frac(W'(z),f'(z)) \
-  =frac(U_infinity(e^(-i chi)-(R^2 e^(i chi))/w^2)+(i Gamma)/(2pi w),1-a^2/z^2). $ <mapped-velocity>
+We must still check that this produces a finite velocity, since both the numerator and denominator of @mapped-velocity now approach zero. Using the definition of a derivative:
 
-The identity $q d zeta=W'(z)d z$ also shows that the circulation is preserved: taking real parts gives $u d xi+v d eta=u_z d x+v_z d y$, so corresponding closed paths have the same circulation integral. Thus $Gamma$ retains its meaning after mapping.
+$ lim_(z->a)frac(W'(z),z-a)=W''(a), quad
+  lim_(z->a)frac(f'(z),z-a)=f''(a) $
 
-This is the same composition rule used for real derivatives, now applied to complex differentiable functions. The transformed potential is locally analytic, so its real and imaginary parts obey the same Cauchy-Riemann relations as before. Taking mixed derivatives in those relations gives Laplace's equation, while @complex-velocity supplies the incompressible, irrotational velocity field. The boundary also remains a streamline: its value of $psi$ is still zero at the corresponding points.
+These equations use $W'(a)=f'(a)=0$. Dividing the two limits therefore gives the trailing-edge velocity $q_T$:
 
-The division by $f'(z)$ has a geometric meaning. Where the map stretches a small displacement by $|f'(z)|$, the speed is divided by that factor. Simply moving the circle's velocity arrows to the new boundary would therefore give incorrect speeds. As $|z|$ grows, $f'(z)=1-a^2/z^2$ tends to $1$, so the undisturbed speed and direction stay $U_infinity$ and $chi$.
+$ q_T=lim_(z->a)frac(frac(W'(z),z-a),frac(f'(z),z-a))
+  =frac(W''(a),f''(a)) $ <trailing-limit>
 
-At the trailing-edge preimage $z=a$, the denominator of @mapped-velocity is zero. Unless its numerator also vanishes, the quotient predicts an unbounded speed. The *Kutta condition* selects the flow which leaves a sharp trailing edge smoothly with finite velocity. It is an additional physical condition imposed on the inviscid model. At a cusped edge, such as this one, the limiting surface velocities meet with a common finite value. MIT's discussion distinguishes this from the condition at an edge with a finite angle. @Darmofal2005Kutta
+Differentiating once more:
 
-To impose it, I write the radius from the circle centre to the trailing-edge preimage as
+$ W''(z)=(2U_infinity R^2 e^(i chi))/w^3-(i Gamma)/(2pi w^2),
+  quad f''(a)=2/a $
 
-$ a-z_0=R e^(-i beta), quad beta=arctan(k/(a-h)). $ <beta>
+Since $w=a-z_0!=0$ at this point and $a>0$, the numerator is finite and the denominator is nonzero. This confirms that the selected circulation satisfies the finite-velocity requirement.
 
-Since $a-h>0$, the inverse tangent identifies the correct angle: the vector has real part $a-h$ and imaginary part $-k$. Substitution into the numerator gives
+Now that we know the velocity around the airfoil, we must relate it to the force on the section. We will do this by finding the pressure and then adding its contributions around the boundary.
 
-$ W'(a)=U_infinity(e^(-i chi)-e^(i chi+2i beta))
-  +frac(i Gamma e^(i beta),2pi R). $
+Let $p$ be the pressure, which is force per unit area, and let $V$ be the fluid speed along a streamline. Consider a short fluid element of length $d s$ and cross-sectional area $A$. If pressure increases by $d p$ along it, the net pressure force is $-A d p$. The minus sign means that the force acts towards the lower pressure. Its mass is $rho A d s$.
 
-To simplify the two exponential terms, factor out $e^(i beta)$. The remaining difference is $e^(-i(chi+beta))-e^(i(chi+beta))=-2i sin(chi+beta)$, using Euler's formula. Therefore
+Let $tau$ represent time. Since the flow is steady, a particle's speed changes as it moves to a new position along the streamline. Using the chain rule and $d s/d tau=V$:
 
-$ W'(a)=i e^(i beta)[-2U_infinity sin(chi+beta)+Gamma/(2pi R)]. $ <kutta-numerator>
+$ (d V)/(d tau)=(d V)/(d s)(d s)/(d tau)=V frac(d V,d s) $
 
-The factor $i e^(i beta)$ is nonzero, so $W'(a)=0$ requires the expression in square brackets to be zero. Solving gives
+Applying Newton's second law:
 
-$ Gamma=4pi R U_infinity sin(chi+beta)
-  =4pi R U_infinity sin(alpha+delta+beta). $ <selected-circulation>
+$ -A d p=rho A d s V frac(d V,d s) $
+$ d p=-rho V d V $
 
-The geometry and angle of attack have now selected one circulation. However, making numerator and denominator zero is not by itself sufficient to establish a finite quotient. I must compare how quickly they approach zero.
+The density is constant, so integrating between the undisturbed flow and a point on the streamline gives:
 
-The definition of a derivative gives, for a small nonzero complex increment $epsilon$,
+$ p-p_infinity=-1/2 rho(V^2-U_infinity^2) $
+$ p+1/2 rho V^2=p_infinity+1/2 rho U_infinity^2 $ <bernoulli>
 
-$ W'(a+epsilon)=W'(a)+epsilon[W''(a)+r_1(epsilon)], \
-  f'(a+epsilon)=f'(a)+epsilon[f''(a)+r_2(epsilon)], $
+Here, $p_infinity$ is the pressure far from the section. This is Bernoulli's equation for flow at constant height. The irrotational assumption allows the same constant to be used throughout the fluid. To see why, the horizontal component of Newton's second law is:
 
-where both error terms $r_1(epsilon)$ and $r_2(epsilon)$ tend to zero. With the selected circulation, $W'(a)=f'(a)=0$, so the common factor $epsilon$ cancels. Since $f''(a)=2/a!=0$, the denominator of the remaining quotient tends to a nonzero number. Thus
+$ p_xi=-rho(u u_xi+v u_eta) $
 
-$ q_T=lim_(z->a)frac(W'(z),f'(z))=frac(W''(a),f''(a)), \
-  W''(z)=frac(2U_infinity R^2 e^(i chi),w^3)-frac(i Gamma,2pi w^2). $ <trailing-limit>
+The terms in brackets are the horizontal acceleration, obtained from $d u/d tau=u_xi (d xi/d tau)+u_eta (d eta/d tau)$, with $d xi/d tau=u$ and $d eta/d tau=v$. Since irrotationality gives $u_eta=v_xi$:
 
-Both derivatives on the right are finite because $a-z_0!=0$. This justifies the finite limit using the same local linear approximation that underlies ordinary differentiation. A zero circle-plane velocity at $z=a$ need not give zero airfoil-plane velocity: the mapping derivative vanishes at the same point, and their ratio is what determines the physical speed.
+$ frac(partial,partial xi)[p+1/2 rho(u^2+v^2)]
+  =rho v(v_xi-u_eta)=0 $
 
-To calculate the force, I must relate the velocity field to pressure. Pressure $p$ is force per unit area. Consider a short fluid element of cross-sectional area $A$ and length $d s$ along a streamline in the horizontal plane of my section. If the pressure rises by $d p$ along it, the net tangential pressure force is approximately $-A d p$. Its mass is $rho A d s$. Viscosity is neglected, so there is no tangential friction force in this model.
+The derivative with respect to $eta$ is similarly zero. Therefore, the quantity in brackets is constant throughout the connected flow region, and its value is fixed by the undisturbed flow. @Yue2005Marine
 
-Write $V$ for the speed along the streamline and $tau$ for physical time. Although the field is steady, a moving particle can accelerate because it reaches positions where the speed is different. The chain rule gives
+Since $q=u-i v$, the speed is $V=|q|=sqrt(u^2+v^2)$. We can express the pressure relative to $p_infinity$ using the pressure coefficient $C_p$:
 
-$ (d V)/(d tau)=(d V)/(d s)(d s)/(d tau)=V(d V)/(d s). $ <streamline-acceleration>
+$ C_p=(p-p_infinity)/(1/2 rho U_infinity^2)=1-frac(abs(q)^2,U_infinity^2) $ <pressure>
 
-Newton's second law therefore gives $-A d p=rho A d s V(d V)/(d s)$, or $d p=-rho V d V$. Density is constant, so ordinary integration between the undisturbed flow and a chosen point gives
+This means that where the air moves faster than $U_infinity$, the pressure is lower than $p_infinity$. For example, if $V=2U_infinity$, then $C_p=1-4=-3$.
 
-$ integral_(p_infinity)^p d P=-rho integral_(U_infinity)^V v d v
-  =-frac(1,2)rho(V^2-U_infinity^2). $ <bernoulli-integration>
+To plot the pressure around the section, let $X$ be the distance along the chord measured from the leading edge. If $zeta_L=xi_L+i eta_L$, projecting onto the chord direction gives:
 
-Here $P$ and $v$ are only integration variables. Rearranging produces the horizontal form of Bernoulli's equation. In the mapped plane $q=u-i v$, so the speed is $V=sqrt(u^2+v^2)=|q|$. Thus
+$ X=(xi-xi_L)cos delta+(eta-eta_L)sin delta $
 
-$ p+frac(1,2)rho V^2=p_infinity+frac(1,2)rho U_infinity^2, \
-  C_p=(p-p_infinity)/(frac(1,2)rho U_infinity^2)=1-frac(abs(q)^2,U_infinity^2). $ <pressure>
-
-The pressure coefficient $C_p$ measures pressure relative to the undisturbed value, on the scale $rho U_infinity^2/2$. For example, $V=U_infinity$ gives $C_p=0$, a stagnation point ($V=0$) gives $C_p=1$, and $V=2U_infinity$ gives $C_p=-3$. A negative coefficient means pressure below $p_infinity$, not negative absolute pressure. The pressure-speed relationship is a consequence of the inviscid energy balance.
-Integration along one streamline initially gives a constant for that streamline. Why can I use the same constant throughout this flow? Along a moving particle, the multivariable chain rule gives $d u/d tau=u u_xi+v u_eta$, since $d xi/d tau=u$ and $d eta/d tau=v$. The net horizontal pressure force per unit volume is $-p_xi$, so the horizontal component of the same force balance is $p_xi=-rho(u u_xi+v u_eta)$. Irrotationality gives $u_eta=v_xi$, so
-
-$ partial/(partial xi)[p+frac(1,2)rho(u^2+v^2)]
-  =-rho(u u_xi+v u_eta)+rho(u u_xi+v v_xi)=0. $
-
-The corresponding derivative with respect to $eta$ is also zero. The expression is therefore constant throughout the connected fluid region, and its far-field value fixes the constant in @pressure. This is where the irrotational assumption is used in applying Bernoulli across streamlines. @Yue2005Marine There is no assumption that air particles taking different routes around the section must meet again at the trailing edge.
-
-For the pressure plot, I measure position along the chord from the leading edge. If $zeta_L=xi_L+i eta_L$, this projected distance is $X=(xi-xi_L)cos delta+(eta-eta_L)sin delta$, the dot product with the chord's unit direction. The horizontal axis is $X/c$, so $0$ marks the leading edge and $1$ the trailing edge. I trace the two boundary arcs joining those edges separately to obtain the upper- and lower-surface curves.
+The ratio $X/c$ therefore runs from $0$ at the leading edge to $1$ at the trailing edge. Evaluating @mapped-velocity and @pressure along the upper and lower surfaces gives:
 
 #figure(
   image("../Resources/pressure_coefficients.svg", width: 100%),
-  caption: [Surface pressure coefficients for the illustrative section at $alpha=5 degree$. Negative coefficients are plotted upward. The curves are calculated from @mapped-velocity and @pressure.],
+  caption: [Pressure coefficients on the section at $alpha=5 degree$. Negative pressure coefficients are plotted upward.],
 ) <pressure-plot>
 
-The lower pressure over much of the upper surface in @pressure-plot suggests a resultant force toward that side. I now need to add the pressure forces on all boundary elements. This uses the line-integral idea already developed for circulation, but the force acts *normal* to the surface, rather than along it.
+The pressure over much of the upper surface is lower than on the lower surface. This suggests an upward force, but to calculate the lift we must account for both the pressure and the direction of the surface at every point.
 
-Let the airfoil boundary $C$ be traced counterclockwise by $zeta(t)=xi(t)+i eta(t)$. For a short parameter interval $Delta t$, the displacement is approximately $(xi'(t),eta'(t))Delta t$. Pythagoras gives its length:
+Let $C$ be the airfoil boundary traced counterclockwise by $zeta(t)=xi(t)+i eta(t)$, where $0<=t<=2pi$. Its tangent vector is $(xi'(t),eta'(t))$. By Pythagoras, a small boundary element has length:
 
-$ Delta s approx sqrt(xi'(t)^2+eta'(t)^2)Delta t,
-  quad d s=sqrt(xi'(t)^2+eta'(t)^2)d t. $ <pressure-arc-length>
+$ d s=sqrt(xi'(t)^2+eta'(t)^2)d t $
 
-This is the arc-length element: the familiar sum of short straight lengths approaches the length of the curve. Dividing the tangent vector by its magnitude gives a unit tangent. A clockwise $90 degree$ rotation of $(a,b)$ is $(b,-a)$; for a counterclockwise boundary this rotation points outward. Hence, at a regular boundary point,
+At a smooth boundary point, the pressure force is perpendicular to this tangent. Rotating the tangent $90 degree$ clockwise gives $(eta'(t),-xi'(t))$, which points outward because we are moving counterclockwise around the section. Dividing by its magnitude gives the outward unit normal, $bold(n)$:
 
-$ bold(n)=frac((eta'(t),-xi'(t)),sqrt(xi'(t)^2+eta'(t)^2)),
-  quad bold(n)d s=(d eta,-d xi). $ <outward-normal>
+$ bold(n)=frac((eta'(t),-xi'(t)),sqrt(xi'(t)^2+eta'(t)^2)) $
+$ bold(n)d s=(d eta,-d xi) $
 
-For example, at the right-hand side of a counterclockwise circle the tangent points upward, so this normal points right, away from the body. This checks the sign. At the cusp I use the limiting boundary values from each side; one point has no finite arc length to contribute separately.
+For a unit span, the surface element has area $d s$, so the force on it is $d bold(F)=-p bold(n)d s$. The negative sign accounts for pressure pushing into the section. Adding these forces around the boundary gives:
 
-For a strip of span $b$, a small surface patch has area $b d s$. Its pressure force is $-p bold(n)b d s$, with the minus sign because pressure pushes into the body. Dividing by $b$ leaves the force *per unit span*, $d bold(F)=-p bold(n)d s$. Adding these contributions and taking the limit gives
+$ F_xi=-integral.cont_C p d eta, quad F_eta=integral.cont_C p d xi $ <pressure-force>
 
-$ F_xi=-integral.cont_C p d eta, quad F_eta=integral.cont_C p d xi. $ <pressure-force>
+Here, $F_xi$ and $F_eta$ are the horizontal and vertical forces per unit span. As with @line-integral, these can be evaluated using the boundary parameter. For example:
 
-For instance, the first component means the ordinary parameter integral
+$ F_xi=-integral_0^(2pi)p(t)eta'(t)d t $ <pressure-parameter>
 
-$ F_xi=-integral_0^(2pi) p(xi(t),eta(t))eta'(t)d t. $ <pressure-parameter>
+In this expression, $p(t)$ means the pressure at the point $zeta(t)$. We can also replace $p$ by $p-p_infinity$: a constant pressure contributes zero because $integral.cont_C d xi=integral.cont_C d eta=0$ on a closed boundary.
 
-The units are pressure times length, $"N m"^(-2) times "m"="N m"^(-1)$, as required. Replacing $p$ by $p-p_infinity$ changes neither component: by the fundamental theorem of calculus, $integral.cont_C d eta=eta(2pi)-eta(0)=0$ and $integral.cont_C d xi=0$. Uniform pressure cancels around a closed body, even when its outline is curved.
-
-To simplify the two force components together, I will use a *complex contour integral*. This adds no new integration operation. If $G(zeta)=A(xi,eta)+i B(xi,eta)$, define
+To simplify the two force components together, we will write them as the complex number $F_xi-i F_eta$. We must first define integration along a complex curve. If $G(zeta)=A(xi,eta)+i B(xi,eta)$, then:
 
 $ integral_C G(zeta)d zeta
-  =integral_(t_0)^(t_1)G(zeta(t))zeta'(t)d t \
-  =integral_C(A d xi-B d eta)+i integral_C(B d xi+A d eta). $ <complex-integral-definition>
+  =integral_(t_0)^(t_1)G(zeta(t))zeta'(t)d t $ <complex-integral>
 
-The second line follows by multiplying $(A+i B)(d xi+i d eta)$ and using $i^2=-1$. Each component is a real line integral with the parameter interpretation already established. The symbol $integral.cont$ indicates that the curve is closed. In particular, $d overline(zeta)=d xi-i d eta$, since complex conjugation reverses the sign of the imaginary part.
+This is called a complex contour integral, where a contour is the curve along which we integrate. Multiplying $G=A+i B$ by $d zeta=d xi+i d eta$ shows that it is composed of two real line integrals:
 
-Representing the force by $F_xi-i F_eta$ and combining @pressure-force gives
+$ integral_C G d zeta
+  =integral_C (A d xi-B d eta)+i integral_C (B d xi+A d eta) $ <integral-components>
 
-$ F_xi-i F_eta=-i integral.cont_C p d overline(zeta). $ <complex-pressure-force>
+Since $d overline(zeta)=d xi-i d eta$, we can combine @pressure-force as follows:
 
-The constant-pressure term vanishes as above, and @pressure then gives
+$ F_xi-i F_eta=-integral.cont_C p d eta-i integral.cont_C p d xi $
+$ F_xi-i F_eta=-i integral.cont_C p d overline(zeta) $
 
-$ F_xi-i F_eta=(i rho)/2 integral.cont_C |q|^2 d overline(zeta). $ <force-step>
+Substituting the pressure from @bernoulli and removing the constant terms gives:
 
-There is one more useful simplification. On the impermeable boundary $psi$ is constant, so the change $d tilde(W)=d phi+i d psi$ is real. By the chain rule it also equals $q d zeta$. A real number equals its complex conjugate, hence
+$ F_xi-i F_eta=(i rho)/2 integral.cont_C |q|^2 d overline(zeta) $
 
-$ q d zeta=overline(q)d overline(zeta),
-  quad q^2 d zeta=q overline(q)d overline(zeta)=|q|^2 d overline(zeta). $
+On the boundary, $psi$ is constant. Therefore, $d tilde(W)=d phi+i d psi=d phi$ is real. We also know that $d tilde(W)=q d zeta$. A real number equals its complex conjugate, so:
 
-Substituting this identity into @force-step produces
+$ q d zeta=overline(q)d overline(zeta) $
 
-$ F_xi-i F_eta=(i rho)/2 integral.cont_C q(zeta)^2 d zeta. $ <blasius>
+Multiplying both sides by $q$:
 
-This is Blasius' force formula. @Olver2024Complex I have derived the form and signs needed here from pressure acting on small surface elements. Its use depends on the boundary being a streamline; it is not a general identity for arbitrary curves carrying arbitrary velocity fields.
+$ q^2 d zeta=q overline(q)d overline(zeta)=|q|^2 d overline(zeta) $
 
-Directly integrating @blasius around the airfoil is awkward. Far from the airfoil, however, the velocity is almost uniform. I need to justify replacing its boundary by a large circle. The result I use is *contour deformation*: if $G$ is analytic throughout the region between two non-intersecting closed curves, its integrals around those curves are equal when both are traversed counterclockwise. This does not say that either integral must be zero. @Campuzano2019Complex
+We can therefore write the force as:
 
-To understand where this result comes from, I first extend the fundamental theorem of calculus, $integral_a^b F'(x)d x=F(b)-F(a)$, to a small rectangle. Suppose $P(x,y)$ and $Q(x,y)$ have continuous first partial derivatives. On the counterclockwise rectangle $[a,b] times [c,d]$, the horizontal edges contribute
+$ F_xi-i F_eta=(i rho)/2 integral.cont_C q(zeta)^2 d zeta $ <blasius>
 
-$ integral_a^b[P(x,c)-P(x,d)]d x
-  =-integral_a^b integral_c^d P_y(x,y)d y d x. $
+This is Blasius' force formula. @Olver2024Complex It allows us to calculate both force components from the complex velocity alone.
 
-The inner integral simply holds $x$ fixed and applies the fundamental theorem in $y$; the outer integral then adds those results along $x$. Similarly, the two vertical edges contribute
+The remaining integral follows the airfoil's curved boundary. It would be easier to evaluate it on a large circle, where the velocity approaches the undisturbed flow. To make this change, we will use Cauchy's theorem: if a function is analytic throughout the region between two closed curves, its integrals around those curves are equal when both are taken counterclockwise. @Campuzano2019Complex
 
-$ integral_c^d[Q(b,y)-Q(a,y)]d y
-  =integral_c^d integral_a^b Q_x(x,y)d x d y. $
+We can understand this result using Green's theorem. For functions $P(xi,eta)$ and $Q(xi,eta)$ with continuous first partial derivatives on a region $D$ and its boundary, it states:
 
-Together these give $integral.cont(P d x+Q d y)=integral.double(Q_x-P_y)d A$. Here the double integral means the limit of sums $(Q_x-P_y)Delta A$ over small area pieces, and $d A$ denotes an area element. On a rectangle it can be calculated by the repeated ordinary integrations above; continuity permits either integration order.
+$ integral.cont_(partial D) (P d xi+Q d eta)
+  =integral.double_D (Q_xi-P_eta)d A $
 
-For a region assembled from adjacent rectangles, contributions on their shared edges cancel because one rectangle follows an edge in the opposite direction to its neighbour. Taking finer partitions leads to *Green's theorem*: the integral around the remaining boundary equals the area integral of $Q_x-P_y$. This explains the mechanism rather than providing the full limiting proof for every possible boundary. I use the theorem for bounded regions with piecewise smooth boundaries and continuously differentiable fields. It also applies to a region containing a hole: the outer boundary is counterclockwise and the boundary around the hole is clockwise.
+Here, $partial D$ means the boundary of the region, and the double integral adds the quantity $Q_xi-P_eta$ over small area elements $d A$. The boundary is followed with the region on the left: counterclockwise around its outside and clockwise around any hole. This formula comes from applying the fundamental theorem of calculus to small rectangles. The integrals along shared edges cancel, leaving only the boundary of the whole region.
 
-Now put $G=A+i B$ in @complex-integral-definition, using the coordinates $xi,eta$. The real line integral has $P=A,Q=-B$, so its Green integrand is $-B_xi-A_eta$. The imaginary one has $P=B,Q=A$, so its integrand is $A_xi-B_eta$. Since $G$ is analytic, the Cauchy-Riemann equations give $A_xi=B_eta$ and $A_eta=-B_xi$. Both integrands are zero.
+Now consider $G=A+i B$ in @integral-components. For its real part, $P=A$ and $Q=-B$, so Green's theorem gives the area integrand $-B_xi-A_eta$. For its imaginary part, $P=B$ and $Q=A$, giving $A_xi-B_eta$. If $G$ is analytic, the Cauchy-Riemann equations give:
 
-Applying this to the region between an outer circle $C_s$ and an inner curve $C_0$ gives
+$ A_xi=B_eta, quad A_eta=-B_xi $
 
-$ 0=integral.cont_(C_s)G d zeta-integral.cont_(C_0)G d zeta,
-  quad integral.cont_(C_0)G d zeta=integral.cont_(C_s)G d zeta. $ <contour-deformation>
+Both area integrands are therefore zero. If $C_s$ is the outer curve and $C_0$ the inner curve, each taken counterclockwise, this gives:
 
-The minus sign records the inner curve's opposite orientation as a boundary of this region. This is the needed form of Cauchy's theorem. For my application $G=q^2$ is analytic in the exterior fluid. I initially take $C_0$ just outside the airfoil and then let it approach the surface. The finite trailing-edge velocity established in @trailing-limit makes the boundary integral well defined in this limit. No analyticity inside the solid is required, and I do not move the contour through the solid or across a singularity.
+$ integral.cont_(C_s)G d zeta-integral.cont_(C_0)G d zeta=0 $
+$ integral.cont_(C_0)G d zeta=integral.cont_(C_s)G d zeta $ <contour-deformation>
 
-I next need a controlled approximation far from the airfoil, rather than the complete velocity expression. I write $E(zeta)=O(1/zeta^2)$ to mean that there are positive constants $K,s_0$ such that $|E(zeta)|<=K/|zeta|^2$ whenever $|zeta|>s_0$. Thus this notation bounds the size of an omitted term; it does not mean the term is exactly zero. The bound is uniform in direction.
+The subtraction occurs because the inner curve is followed clockwise as part of the region's boundary. We can apply this to $G=q^2$, which is analytic outside the airfoil. Taking $C_0$ towards the airfoil surface gives the integral in @blasius; the finite trailing-edge velocity ensures that this boundary limit is finite.
 
-The terms in @mapped-velocity can be compared using ordinary algebra. Since $w=z-z_0$,
+We will take the outer curve to be a circle of radius $s$ centred at the origin of the airfoil plane. To evaluate the integral as $s$ increases, we need to know which terms in $q^2$ remain significant far from the airfoil.
 
-$ 1/(z-z_0)-1/z=z_0/(z(z-z_0))=O(1/z^2). $
+Recall that $w=z-z_0$ and $zeta=z+a^2/z$. Far away, both $w/z$ and $zeta/z$ approach $1$, so their magnitudes become comparable. Also:
 
-The doublet velocity is also of order $1/z^2$. Moreover,
+$ 1/w-1/zeta=(zeta-w)/(w zeta)=(z_0+a^2/z)/(w zeta) $
+$ 1/(1-a^2/z^2)-1=(a^2/z^2)/(1-a^2/z^2) $
 
-$ 1/(1-a^2/z^2)-1=(a^2/z^2)/(1-a^2/z^2)=O(1/z^2). $
+Both differences decrease at least as fast as $1/(abs(zeta)^2)$. The doublet's velocity also decreases at this rate because it contains $1/w^2$. Therefore, @mapped-velocity can be written as:
 
-So dividing by the mapping derivative changes the far-field velocity only at this smaller order. Finally, on the exterior inverse branch, $zeta-z=a^2/z$ and $zeta/z->1$ imply that $|z|$ and $|zeta|$ have the same leading size. In particular $1/z-1/zeta=a^2/(z^2 zeta)=O(1/zeta^3)$, so I can use $1/zeta$ in the leading reciprocal term. Therefore
+$ q(zeta)=U_infinity e^(-i chi)+(i Gamma)/(2pi zeta)+E_1 (zeta) $
 
-$ q(zeta)=U_infinity e^(-i chi)+(i Gamma)/(2pi zeta)+O(1/zeta^2), \
-  q(zeta)^2=U_infinity^2 e^(-2i chi)
-  +(i U_infinity Gamma e^(-i chi))/(pi zeta)+O(1/zeta^2). $ <far-field>
+Here, $E_1$ contains the remaining terms, and there is a constant $K_1>0$ such that $|E_1 (zeta)|<=K_1/(abs(zeta)^2)$ sufficiently far from the airfoil. Squaring gives:
 
-The second expression follows from $(A+B)^2=A^2+2A B+B^2$: the square of a reciprocal term is of order $1/zeta^2$. This establishes the approximation needed for the integral without assuming a Laurent-series or residue formula.
+$ q(zeta)^2=U_infinity^2 e^(-2i chi)
+  +(i U_infinity Gamma e^(-i chi))/(pi zeta)+E_2 (zeta) $ <far-field>
 
-Parameterize the large circle by $zeta=s e^(i t)$, $0<=t<=2pi$. A constant integrates to zero because $integral.cont d zeta=zeta(2pi)-zeta(0)=0$. For the reciprocal term,
+The second term comes from twice the product of the first two terms in $q$. All other terms are included in $E_2$, which similarly satisfies $|E_2 (zeta)|<=K_2/(abs(zeta)^2)$ for some constant $K_2>0$.
 
-$ integral.cont_(C_s)(d zeta)/zeta
-  =integral_0^(2pi)(i s e^(i t))/(s e^(i t))d t
-  =integral_0^(2pi)i d t=2pi i. $ <circle-integral>
+To integrate around the large circle, let $zeta=s e^(i t)$, where $0<=t<=2pi$. The constant term in @far-field integrates to zero because $integral.cont d zeta=0$. For the reciprocal term:
 
-For the remainder, the triangle inequality for a sum extends to its integral. Its absolute contribution is at most its maximum size times the path length:
+$ integral.cont_(C_s) frac(d zeta,zeta)
+  =integral_0^(2pi) frac(i s e^(i t),s e^(i t))d t
+  =integral_0^(2pi)i d t=2pi i $
 
-$ abs(integral.cont_(C_s) E(zeta)d zeta)
-  <=integral_0^(2pi)abs(E(s e^(i t)))s d t
-  <=(K/s^2)(2pi s)=(2pi K)/s -> 0. $ <remainder-bound>
+The magnitude of the remaining integral is no greater than the maximum magnitude of $E_2$ multiplied by the circle's circumference:
 
-The factor $s$ is $|zeta'(t)|$, so the length of the integration path has been included. A small pointwise error alone would not be enough if the path length grew too quickly. Contour deformation says the integral has the same value for every sufficiently large $s$; taking $s->infinity$ therefore evaluates the exact integral around the body.
+$ abs(integral.cont_(C_s)E_2 (zeta)d zeta)
+  <=K_2/s^2 dot 2pi s=(2pi K_2)/s $
 
-Only the reciprocal term survives. Substituting its value into @blasius gives
+As $s->infinity$, this approaches zero. Since @contour-deformation gives the same integral for every sufficiently large circle, only the reciprocal term contributes to the final value. Substituting into @blasius:
 
-$ F_xi-i F_eta=(i rho)/2 ((i U_infinity Gamma e^(-i chi))/pi)(2pi i)
-  =-i rho U_infinity Gamma e^(-i chi). $ <complex-force>
+$ F_xi-i F_eta=(i rho)/2 ((i U_infinity Gamma e^(-i chi))/pi)(2pi i) $
+$ F_xi-i F_eta=-i rho U_infinity Gamma e^(-i chi) $
 
-Since $e^(-i chi)=cos chi-i sin chi$, the real part is $-rho U_infinity Gamma sin chi$, and the negative of the imaginary part is $rho U_infinity Gamma cos chi$. Thus
+Using $e^(-i chi)=cos chi-i sin chi$ and equating real and imaginary parts:
 
-$ (F_xi,F_eta)=rho U_infinity Gamma(-sin chi,cos chi). $ <force-vector>
+$ F_xi=-rho U_infinity Gamma sin chi, quad
+  F_eta=rho U_infinity Gamma cos chi $ <force-components>
 
-The unit vector along the free stream is $(cos chi,sin chi)$. Its dot product with @force-vector is $rho U_infinity Gamma[-sin chi cos chi+cos chi sin chi]=0$, so this ideal model predicts zero drag. Rotating that unit vector $90 degree$ counterclockwise gives $(-sin chi,cos chi)$, which I use as the positive lift direction. The force component in that direction is
+We now have the total force per unit span. To find lift, we must take its component perpendicular to the undisturbed velocity. The unit vector in the flow direction is $(cos chi,sin chi)$. Rotating this $90 degree$ counterclockwise gives $(-sin chi,cos chi)$, which I will use as the positive lift direction. Taking the dot product:
 
-$ L'=(F_xi,F_eta) dot (-sin chi,cos chi)
-  =rho U_infinity Gamma(sin^2 chi+cos^2 chi)
-  =rho U_infinity Gamma. $ <kutta-joukowski>
+$ L'=-F_xi sin chi+F_eta cos chi $
+$ L'=rho U_infinity Gamma(sin^2 chi+cos^2 chi) $
+$ L'=rho U_infinity Gamma $ <kutta-joukowski>
 
-This is the Kutta-Joukowski lift formula for my clockwise-positive circulation convention. The derivation connects the circulation chosen at the trailing edge to a net pressure force, using integration and vector projection.
+This is the Kutta-Joukowski lift formula for our clockwise-positive definition of $Gamma$. The force component parallel to the flow is the drag per unit span, $D'$:
 
-Combining @selected-circulation, @kutta-joukowski and @cl-definition gives the result I set out to obtain:
+$ D'=F_xi cos chi+F_eta sin chi=0 $
 
-$ L'=4pi rho R U_infinity^2 sin(alpha+delta+beta), quad
-  C_l (alpha)=(8pi R)/c sin(alpha+delta+beta). $ <final-coefficient>
+Therefore, this ideal flow produces a force perpendicular to the apparent wind, with no drag.
 
-Here $R$, $beta$, $delta$ and $c$ are determined by the selected circle and its mapped section. The dependence on $rho$ and $U_infinity$ cancels in $C_l$. This is consistent with the definition: doubling $U_infinity$ multiplies the predicted dimensional lift by four, while the coefficient is unchanged at fixed geometry and incidence. Scaling every geometric length by the same positive factor also leaves $R/c$, $beta$ and $delta$ unchanged, so the ideal sectional coefficient is independent of absolute size.
+We can now return to the sectional lift coefficient defined at the beginning. Substituting @kutta-joukowski into @cl-definition:
 
-For the chosen section, @geometry-values and @beta give $beta approx 0.094951706$ and $beta+delta approx 0.094512922$. The numerical coefficient is therefore
+$ C_L=L'/(1/2 rho U_infinity^2 c)
+  =(rho U_infinity Gamma)/(1/2 rho U_infinity^2 c)
+  =(2Gamma)/(U_infinity c) $
 
-$ C_l (alpha) approx 6.612032 sin(alpha+0.094512922). $ <numerical-coefficient>
+Finally, using @selected-circulation:
 
-At $alpha=5 degree=5pi/180$, this predicts $C_l approx 1.195323$. This number describes the illustrative profile under the stated conditions. It does not establish the lift coefficient of a particular trimmed ILCA sail.
+$ C_L (alpha)=(8pi R)/c sin(alpha+delta+beta) $ <final-coefficient>
 
-To check the calculation, I also evaluate @pressure-force numerically without using @kutta-joukowski. In @pressure-parameter, the variable of integration is the circle parameter $t$. Dividing $[0,2pi]$ into $N$ equal intervals gives $Delta t=2pi/N$. On each interval I approximate the integrand by its value at the midpoint and multiply by $Delta t$, exactly as in an ordinary midpoint Riemann sum. Increasing $N$ makes the boundary sampling finer. At midpoint values $t_j=2pi(j+1/2)/N$, for $j=0,dots,N-1$, define $p_j^*=p(t_j)-p_infinity$ from @pressure. The midpoint sums are
+This gives the lift coefficient in terms of the angle of attack and the section's geometry. The density and wind speed cancel because the coefficient measures lift relative to $rho U_infinity^2 c/2$. The geometric scale also cancels: enlarging every length by the same factor leaves $R/c$ and the angles unchanged.
 
-$ F_xi approx -(2pi)/N sum_(j=0)^(N-1)p_j^* eta'(t_j), quad
-  F_eta approx (2pi)/N sum_(j=0)^(N-1)p_j^* xi'(t_j). $ <numerical-force>
+For the chosen section, @beta gives $beta approx 0.094951706$. Combining this with @geometry-values:
 
-The primes on $xi$ and $eta$ here mean derivatives with respect to $t$, whereas the prime on $L'$ means per unit span. Resolving these force sums perpendicular and parallel to the free stream gives $L'= -F_xi sin chi+F_eta cos chi$ and the drag per unit span $D'=F_xi cos chi+F_eta sin chi$. I divide each by $rho U_infinity^2 c/2$ to obtain the numerical $C_l$ and the drag coefficient $C_d$. Setting $a=U_infinity=rho=1$ merely chooses units for this dimensionless check. The following values were computed from the full mapped boundary; the calculation is reproduced in the accompanying `calculations.py` file.
+$ C_L (alpha) approx 6.612032 sin(alpha+0.094512922) $ <numerical-coefficient>
+
+For example, at $alpha=5 degree=5pi/180$:
+
+$ C_L approx 6.612032 sin(5pi/180+0.094512922) approx 1.195323 $
+
+To check this result, I will also calculate the force directly from the pressure integral in @pressure-force. Dividing $0<=t<=2pi$ into $N$ equal intervals gives $Delta t=2pi/N$. On each interval, we can approximate the integrand by its value at the midpoint:
+
+$ t_j=frac(2pi,N) (j+1/2), quad j=0,1,dots,N-1 $
+
+Let $p_j^*=p(t_j)-p_infinity$. Multiplying each midpoint value by $Delta t$ and adding gives:
+
+$ F_xi approx -(2pi)/N sum_(j=0)^(N-1)p_j^* eta'(t_j) $
+$ F_eta approx (2pi)/N sum_(j=0)^(N-1)p_j^* xi'(t_j) $ <numerical-force>
+
+We then resolve these forces into $L'$ and $D'$ as above. Dividing by $rho U_infinity^2 c/2$ gives $C_L$ and the corresponding drag coefficient $C_D$. The primes on $xi$ and $eta$ denote differentiation with respect to $t$; the primes on $L'$ and $D'$ denote force per unit span.
+
+Using $a=U_infinity=rho=1$ and $alpha=5 degree$ gives the following values. This choice of units does not affect the coefficients. The calculations are reproduced in the accompanying `calculations.py` file.
 
 #figure(
   table(
     align: center,
     columns: 3,
-    [*$N$*], [*Numerical $C_l$*], [*Numerical $C_d$*],
+    [*$N$*], [*Numerical $C_L$*], [*Numerical $C_D$*],
     [32], [1.190231642], [$-3.3063 times 10^(-3)$],
     [64], [1.195496079], [$1.7163 times 10^(-4)$],
     [128], [1.195322877], [$4.0266 times 10^(-7)$],
     [256], [1.195322725], [$1.1736 times 10^(-12)$],
   ),
-  caption: [Convergence of direct surface-pressure integration at $alpha=5 degree$. The analytical predictions are $C_l=1.195322725 dots$ and $C_d=0$.],
+  caption: [Direct pressure integration at $alpha=5 degree$, compared with the analytical results $C_L approx 1.195322725$ and $C_D=0$.],
 ) <convergence-table>
 
-The agreement in @convergence-table checks the transformation, force signs and normalization using a second calculation. It also shows how insufficient resolution can produce a small artificial drag. This is a check of the mathematics and numerical implementation; agreement between two calculations of the same ideal model does not validate its assumptions against real sailing conditions.
+As $N$ increases, the calculated lift coefficient approaches the analytical result and the drag coefficient approaches zero. The agreement supports the derivation, while the small nonzero drag at lower values of $N$ shows the effect of approximating a curved boundary with too few intervals. Both calculations use the same ideal-flow assumptions, so this checks their mathematical consistency rather than their accuracy for a real sail.
 
-To investigate the dependence on angle, I keep $h/a=-0.05$ fixed and compare $k/a=0$, $0.05$ and $0.10$. Each circle's radius is recalculated using @circle-radius, and its chord and chord angle are recalculated using @nose-condition. Thus this comparison changes the profile geometry consistently. It does not hold thickness exactly constant while changing camber.
+To investigate how the section's shape affects lift, I will keep $h/a=-0.05$ and compare $k/a=0$, $0.05$, and $0.10$. For each value, I recalculate $R$, $c$, $delta$, and $beta$ using the same method. This changes the geometry of the whole section, including its camber.
 
 #figure(
   image("../Resources/lift_coefficients.svg", width: 100%),
-  caption: [Predicted sectional lift coefficients for three generating-circle offsets. These compare ideal-flow solutions, not measured performance or a verified attached-flow operating range.],
+  caption: [Sectional lift coefficient against angle of attack for three vertical offsets of the generating circle.],
 ) <lift-plot>
 
-In @lift-plot the symmetric section, $k=0$, produces zero lift at zero incidence. Increasing the positive vertical offset moves the zero-lift crossing to a negative angle. From @final-coefficient, the zero nearest $alpha=0$ is
+When $k=0$, the section is symmetric and produces zero lift at $alpha=0$. Increasing $k$ shifts the zero-lift angle towards a negative value. We can find this angle directly from @final-coefficient by setting $C_L=0$. The solution nearest $alpha=0$ satisfies:
 
-$ alpha_0=-(delta+beta). $ <zero-lift>
+$ alpha+delta+beta=0 $
+$ alpha_0=-(delta+beta) $ <zero-lift>
 
-For the three profiles, the predicted zero-lift angles are $0 degree$, $-2.71391 degree$ and $-5.41519 degree$, respectively. The cambered example therefore has positive lift even when its chord is aligned with the flow. At the special incidence $alpha_0$, however, it has zero net lift despite its curved shape. This makes clear that camber alone does not guarantee lift at every angle; the circulation selected by the geometry and incidence is what enters @kutta-joukowski.
+Here, $alpha_0$ is the zero-lift angle. For the three sections, it is approximately $0 degree$, $-2.71391 degree$, and $-5.41519 degree$, respectively. Therefore, the chosen cambered section produces positive lift even when its chord is aligned with the flow.
 
-Differentiating @final-coefficient with respect to angle in radians gives
+The curves also appear nearly straight over the plotted range. We can explain this by writing @final-coefficient as:
 
-$ (d C_l)/(d alpha)=(8pi R)/c cos(alpha+delta+beta). $ <lift-slope>
+$ C_L=(8pi R)/c sin(alpha-alpha_0) $
 
-For the chosen profile at $alpha=0$, this is about $6.58252$ per radian. If $alpha_d$ is the numerical angle in degrees, then $alpha=(pi/180)alpha_d$, so the chain rule multiplies the slope by $pi/180$, giving $0.114887$ per degree. A one-degree increase near this point therefore increases the model coefficient by approximately $0.115$. Close to the zero-lift angle, the tangent approximation $sin epsilon approx sin 0+epsilon cos 0=epsilon$ gives $sin(alpha-alpha_0) approx alpha-alpha_0$, giving the local linear approximation $C_l approx (8pi R/c)(alpha-alpha_0)$. This explains the nearly straight curves over the plotted interval.
+For a small angle $epsilon$ in radians, $sin epsilon approx epsilon$. Therefore, close to the zero-lift angle:
 
-There is also a useful limiting check. For an uncambered section with $k=0$ and $h$ approaching zero from below, $R->a$, $c->4a$ and $delta=beta=0$. Thus
+$ C_L approx (8pi R)/c (alpha-alpha_0) $
 
-$ C_l->2pi sin alpha approx 2pi alpha quad (|alpha| " small"). $ <thin-limit>
+To calculate the rate of change more precisely, we can differentiate the original expression:
 
-The small-angle result is the familiar thin-airfoil lift slope @Darmofal2005Thin. The exact flat-plate limit has a leading-edge singularity, so I use it as a limit of finite-thickness profiles and retain the rounded nose for the numerical pressure calculation. The lift slope of the chosen finite-thickness section is about $4.76%$ above $2pi$ near zero incidence. This difference is a consequence of the selected geometry, not a numerical error.
+$ (d C_L)/(d alpha)=(8pi R)/c cos(alpha+delta+beta) $ <lift-slope>
 
-The mathematical formula would reach its positive maximum when $alpha+delta+beta=pi/2$. For the chosen section, this occurs near $84.58 degree$. It would be misleading to interpret that value as an optimal ILCA sail angle. The attached-flow model contains no mechanism for predicting stall or the changes in pressure caused by separation. The formal maximum is an example of the mathematics continuing beyond the physical assumptions that made the calculation possible.
+For our chosen section at $alpha=0$, this gives approximately $6.58252$ per radian. Since one degree is $pi/180$ radians, the corresponding rate per degree is $6.58252(pi/180) approx 0.114887$. Thus, near zero incidence, increasing the angle of attack by one degree increases the predicted coefficient by approximately $0.115$.
 
-The result also helps explain the daggerboard's role. For a chosen tack, let $theta_A$ be the angle between the bow and the direction from which the apparent wind arrives. Resolving positive aerodynamic lift and drag magnitudes into forward and leeward components gives
+We can also check the formula by considering an increasingly thin, symmetric section. Setting $k=0$ and allowing $h$ to approach zero from below gives $R->a$, $c->4a$, and $delta=beta=0$. Therefore:
 
-$ F_"forward"=L sin theta_A-D cos theta_A, quad
-  F_"leeward"=L cos theta_A+D sin theta_A. $ <boat-forces>
+$ C_L->(8pi a)/(4a)sin alpha=2pi sin alpha $
 
-Here $L$ and $D$ refer to the sail's resultant forces; the same projections can be applied per unit span. Small sideways motion, or leeway, produces an angle of attack on the daggerboard. Its hydrodynamic force provides lateral resistance, approximately balancing the sail's leeward force in steady sailing. The sail already has a forward force component. At constant speed this is balanced by water resistance; an excess forward force produces acceleration @Viola2011Sail. A full speed calculation would require the hull, daggerboard, sail variation with height, and their coupled dependence on boat motion. The present result establishes the sectional aerodynamic contribution.
+For small $alpha$, this becomes $C_L approx 2pi alpha$, which agrees with the thin-airfoil lift slope. @Darmofal2005Thin I use this as a limiting check; the rounded leading edge is retained in the pressure calculation above.
 
-Several limitations therefore remain when I relate this model to an ILCA 7. The Joukowski family restricts which profiles can be represented, and the chosen horizontal and vertical offsets have not been fitted to an actual sail. Even if a photographed section were fitted accurately, a real mainsail deforms as its loading and controls change. The mast also changes the leading-edge flow. Experimental sail-pressure research identifies separation and reattachment which are absent from this ideal model @Viola2011Sail. The zero drag found above is another consequence of the assumptions: real sails experience viscous and three-dimensional aerodynamic resistance.
+This result helps explain the sail's contribution to forward motion. Although lift acts perpendicular to the apparent wind, it can have a forward component relative to the boat. It also produces a sideways component, which the daggerboard helps resist through its force on the water. Calculating the boat's speed would require these forces to be balanced with the resistance of the hull and the rest of the boat. @Viola2011Sail
 
-Furthermore, the calculation treats a section as part of a two-dimensional flow. A real sail has finite height, a changing chord, twist, and variations in apparent wind. A single sectional coefficient cannot be multiplied by the entire sail area to obtain an exact total lift. Extending the work would first require measured section geometry and local incidence, followed by a treatment of the variation and interaction between sections. Experimental pressure or force measurements under matched conditions would then be needed to evaluate accuracy.
+There are several limitations when applying this result to an ILCA 7. First, the circle offsets were chosen to give an illustrative cambered section. To calculate a coefficient for a particular sail, I would need to measure its section and determine how closely a Joukowski profile could represent it. A real sail also changes shape with its controls and the wind loading, while this model assumes a fixed profile.
 
-Within its assumptions, the exploration has produced the intended relationship, $C_l (alpha)=(8pi R/c)sin(alpha+delta+beta)$. The circle made it possible to satisfy the flow boundary condition explicitly. The transformation changed that simple geometry into a cambered foil, while its derivative determined the new velocity. The Kutta condition selected the circulation, and integrating the resulting pressure established a force perpendicular to the apparent wind. This is a mathematical derivation of lift for an idealized sail section, with the physical assumptions and the extra trailing-edge condition stated throughout.
+Second, the assumptions exclude viscosity and flow separation, where the air stops following the sail's surface. Consequently, the model cannot predict stall, and the zero drag obtained above does not represent a real sail. Experimental sail-pressure measurements show separation and reattachment that this model does not include. @Viola2011Sail The formula's increase in lift over the plotted interval therefore cannot by itself establish the best sailing angle.
 
-For the illustrative profile, the derivation predicts positive lift at zero chord incidence, a zero-lift angle near $-5.42 degree$, and increasing lift over the small-angle interval considered. It gives a mathematical reason why adjusting a sail's angle changes the force I feel while sailing. It also clarifies what this explanation does not determine: the true coefficient of an ILCA sail, its stall angle, or the trim that makes the complete boat fastest. Those questions require additional geometry and fluid behaviour beyond the model developed here.
+Finally, this is a two-dimensional section. An ILCA sail has finite height, and its chord, shape, and angle to the apparent wind vary with height. A single sectional coefficient is therefore insufficient to determine the total force on the sail. Extending the model would require measurements at several heights and an account of the interaction between those sections.
+
+Within these assumptions, we have obtained $C_L (alpha)=(8pi R/c)sin(alpha+delta+beta)$. Beginning with a circle allowed us to construct a flow which followed its boundary. The Joukowski transformation then gave us an airfoil, and the Kutta condition determined the circulation needed for a finite trailing-edge velocity. Integrating the resulting pressure gave the lift. For the chosen section, this predicts $C_L approx 1.195$ at $5 degree$ and explains how both camber and angle of attack affect the force. It provides a mathematical model of an idealized sail section, with measured geometry and more complete flow assumptions still needed to determine the lift coefficient of an actual ILCA 7 sail.
+
