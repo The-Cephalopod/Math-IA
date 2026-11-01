@@ -170,6 +170,10 @@ $ e^(i x) = cos(x) + i sin(x) $ <euler>
 
 By substituting $x$ for $theta$, we have shown that $z = e^(i theta_z)$ is a point that lies on the complex unit circle.
 
+As $t$ increases from $0$ to $2pi$, (48) traces the circle once counterclockwise. Multiplication by a radius $R>0$ enlarges it and addition of a centre $z_0=h+i k$ translates it:
+
+$ z(t)=z_0+R e^(i t)=(h+R cos t)+i(k+R sin t), quad 0<=t<=2pi. $ <circle>
+
 To create an airfoil from this complex unit circle, we will use conformal mapping. Conformal mapping is used to map one plane to another while preserving the angles between the tangent lines of intersecting, parameterized smooth curves in either plane. Complex functions can be mapped conformally if the function is analytic and its derivative at any conformally mapped point is nonzero. A function being "analytic" means that if we let $f: A->CC$ where $A subset CC$ is an open set (a set which does not include its boundary points), then $f$ must be differentiable at every point $z_0 in A$.
 
 We previously defined the complex numbers $z = a + i b$ and $zeta = xi + i eta$. Now let's consider these same complex numbers to represent two planes. We will map the plane containing the unit circle $z = a + i b$ to the plane $zeta = xi + i eta$ to transform the unit circle into a foil.
@@ -186,52 +190,27 @@ If we drop the subscript from $z_0$ and let $Delta w = f(z_0+Delta z)-f(z_0)$, t
 
 $ (d w)/(d z)=lim_(Delta z->0) (Delta w)/(Delta z) $
 
-You might notice that the formula (49) for a complex-valued function is identical in form to that of a real-valued function. However, for $f'(z_0)$ to exist, the relevant limit must exist independent of the direction from which $z$ approaches $z_0$.
+You might notice that the derivative (49) for a complex-valued function is identical in form to that of a real-valued function. However, for $f'(z_0)$ to exist, the relevant limit must exist independent of the direction from which $z$ approaches $z_0$.
 
 Other than this difference, the definition in (49) means that complex numbers can be differentiated using the same rules applied to real numbers. 
 
-The type of conformal mapping we will use to create an airfoil is called the Joukowski transform, defined as:
-
-$ zeta = f(z) = z + 1/z $
-
-Here, $zeta$ is a function of the complex number $z$. We can then separate $zeta$ into its real and imaginary components:
-
-$ x=a(1+xi^2/(a^2+b^2)) $
-$ y=b(1-xi^2/(a^2+b^2)) $
-
-Since we have shown $z = e^(i theta_z)$ to be a point on the complex unit circle, we can parameterize $z$ from $zeta = f(z) = z + 1/z$ such that
-
-$ z(t)=z_0 +R e^(i t) $
-
-where $t=theta$, $0<=t<=2 pi$.
-
-As $t$ increases from $0$ to $2pi$,  traces the circle once counterclockwise. Multiplication by a radius $R>0$ enlarges it and addition of a centre $z_0=h+i k$ translates it:
-
-$ z(t)=z_0+R e^(i t)=(h+R cos t)+i(k+R sin t), quad 0<=t<=2pi. $ <circle>
-
-An important requirement is that this limit must be the same along every approach to zero in the plane. For example, $f(z)=z^2$ gives the quotient $2z_p+Delta z$, which tends to $2z_p$ along every path. In contrast, for $f(z)=overline(z)$, the quotient is $overline(Delta z)/(Delta z)$. It is $1$ for real increments and $-1$ for purely imaginary increments, so this function has no complex derivative. Having two real coordinate functions is therefore not enough. @Campuzano2019Complex
-
-An open region contains a small disc around each of its points. A function complex differentiable throughout an open region is called analytic there. For the rational functions used below, the usual sum, product, quotient and chain rules follow from the same limit manipulations as in real calculus, wherever the denominators are nonzero. @Campuzano2019Complex
-
-The geometry of @derivative is especially useful. For small displacements, $Delta zeta approx f'(z_p)Delta z$. If $f'(z_p)=s e^(i omega)$ with $s>0$, the multiplication rule shows that every small displacement at that point is scaled by $s$ and rotated by $omega$. Two tangent directions undergo the same rotation, so the angle between them is unchanged. A map preserving these local angles is called conformal. This is a local statement: lengths, areas and the overall shape can change. If $f'(z_p)=0$, the first-order displacement vanishes and this rotation-and-scaling argument no longer applies. @Campuzano2019Complex
+An important requirement is that this limit must be the same along every approach to zero in the plane. For example, $f(z)=z^2$ gives the quotient $2z_0+Delta z$, which tends to $2z_0$ along every path. In contrast, for $f(z)=overline(z)$, the quotient is $overline(Delta z)/(Delta z)$. It is $1$ for real increments and $-1$ for purely imaginary increments, so this function has no complex derivative. Having two real coordinate functions is therefore not enough @Campuzano2019Complex.
 
 The particular transformation I use is
 
 $ zeta=f(z)=z+a^2/z, quad a>0, quad z!=0. $ <joukowski>
 
-Here $a$ is a length scale, so both terms have units of length. To turn this rule into coordinate equations, I multiply $1/(x+i y)$ by $(x-i y)/(x-i y)$ and collect real and imaginary parts:
+Here $a$ is a length scale, so both terms have units of length. To turn this rule into coordinate equations, I multiply $1/(x+i y)$ by $(x-i y)/(x-i y)$ to obtain real and imaginary parts:
 
 $ zeta=x+i y+(a^2(x-i y))/(x^2+y^2), \
   xi=x(1+a^2/(x^2+y^2)), quad
   eta=y(1-a^2/(x^2+y^2)). $ <mapped-coordinates>
 
-Its image is the real line segment from $-2a$ to $2a$, traced once in each direction. Thus a circle with the matching radius and no offset produces a flat plate. To obtain a cambered profile with finite thickness, I must displace the circle.
-
-Differentiating the powers $z$ and $z^(-1)$ gives
+Differentiating $f(z)$ gives:
 
 $ f'(z)=1-a^2/z^2, quad f''(z)=2a^2/z^3. $ <map-derivatives>
 
-There are three exceptional points. At $z=0$ the function is undefined; this is a singularity. At $z=plus.minus a$ it is defined but $f'(z)=0$; these are critical points. For the airfoil family considered here, I choose $h<0$ and
+At $z=0$ the function is undefined; this is a singularity. At $z=plus.minus a$ it is defined but $f'(z)=0$; these are critical points. For the airfoils considered here, I will use $h<0$ and
 
 $ R=|a-z_0|=sqrt((a-h)^2+k^2). $ <circle-radius>
 
@@ -240,38 +219,16 @@ The circle therefore passes through $z=a$, which maps to $zeta=2a$. The other cr
 $ R^2-|-a-z_0|^2=-4a h>0, quad
   R^2-|z_0|^2=a^2-2a h>0. $
 
-A point is inside a circle precisely when its distance to the centre is less than the radius. These inequalities therefore place both problematic points outside the fluid region, which consists only of the circle's exterior. The derivative is nonzero at every fluid point.
+A point is inside a circle when its distance to the centre is less than the radius. These inequalities therefore place both problematic points outside the fluid region, which consists only of the circle's exterior.
 
-Local angle preservation alone does not guarantee that two distant fluid points have different images. I can check that separately by algebra. If $f(z_1)=f(z_2)$, then
-
-$ (z_1-z_2)(1-a^2/(z_1 z_2))=0. $
-
-Thus either $z_1=z_2$ or $z_2=a^2/z_1$. To decide whether the latter pair could both lie outside my circle, define the signed quantity
-
-$ E(z)=|z-z_0|^2-R^2=|z|^2-2h x-2k y-a^2+2a h. $
-
-It is positive outside the circle and negative inside. Using $a^2/z=a^2(x-i y)/|z|^2$ and substituting into this expression gives
-
-$ E(z)+(|z|^2/a^2)E(a^2/z)=(2h/a)|z-a|^2. $
-
-For an exterior point, $E(z)>0$, while the right-hand side is negative since $h<0$ and $z!=a$. Therefore $E(a^2/z)<0$: the possible partner lies inside the excluded circle. No two exterior points share an image. This is the meaning of one-to-one here and allows me to choose a unique exterior preimage when transferring the flow later.
-
-At the boundary point $z=a$, I can explain the sharp trailing edge without assuming that a smooth circle always has a smooth image. Rearranging @joukowski gives the exact identity
-
-$ f(z)-2a=(z-a)^2/z. $ <cusp>
-
-If $z=a+epsilon$ is nearby, this is approximately $epsilon^2/a$. Opposite small displacements along the circle's tangent have the same leading square, so the two sides of the image meet in the same tangent direction. They form a cusp, a sharp point with zero opening angle. This is where conformality fails on the boundary, while it still holds throughout the exterior fluid.
-
-For a numerical example, I use $h/a=-0.05$ and $k/a=0.10$. The horizontal offset gives this profile a rounded nose and small finite thickness; the vertical offset gives it camber. I express all geometric lengths in units of $a$. These ratios define an illustrative shape rather than a fit to an actual sail.
+For a numerical example, I will use $h/a=-0.05$ and $k/a=0.10$. The horizontal offset gives this profile a rounded nose and small finite thickness; the vertical offset gives it camber. I express all geometric lengths in units of $a$. These ratios define an illustrative shape rather than a fit to an actual sail.
 
 #figure(
   image("../Resources/joukowski_section.svg", width: 100%),
   caption: [The generating circle and mapped section in their respective planes. The chord is shown on the section.],
 ) <geometry-plot>
 
-The coordinate equations also make the construction directly plottable in Desmos: substitute $x(t)=h+R cos t$ and $y(t)=k+R sin t$ into @mapped-coordinates and plot $(xi(t),eta(t))$ for $0<=t<=2pi$. This traces the full section, including both surfaces.
-
-The chord must be measured from the mapped profile. For this rounded-nose family, I identify the leading edge $zeta_L$ operationally as the point farthest from the trailing edge $zeta_T=2a$. Write $g(t)=f(z(t))=xi(t)+i eta(t)$. Maximizing the distance is equivalent to maximizing its square, since squaring preserves the order of nonnegative numbers. Thus I maximize
+The chord must be measured from the mapped profile. For this rounded-nose family, the leading edge $zeta_L$ is the point farthest from the trailing edge $zeta_T=2a$. Therefore,  $g(t)=f(z(t))=xi(t)+i eta(t)$. Maximizing the distance is equivalent to maximizing its square, since squaring preserves the order of nonnegative numbers. Thus I maximize
 
 $ H(t)=|g(t)-2a|^2=(xi(t)-2a)^2+eta(t)^2. $
 
