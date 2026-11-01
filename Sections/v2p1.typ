@@ -2,13 +2,14 @@
 #counter(page).update(1) 
 #set page(numbering: "1", number-align: top+right, margin: 2.5cm)
 
-It is well known from qualitative experience that sailboats can move forward even while travelling into the wind. Sailboats can be broken down into 2 primary rigid components: the sail and the daggerboard. We can think of these components as foils. An example of the cross-section of a foil is shown in _fig. 2_. The perspective shown by _fig. 2_ is representative of a top-down view of a sail, or daggerboard.
+It is well known from qualitative experience that sailboats can move forward even while travelling into the wind. Sailboats can be broken down into 2 primary rigid components: the sail and the daggerboard. We can think of these components as foils. An example of the cross-section of a foil is shown in @airfoil-diagram. The perspective shown by @airfoil-diagram is representative of a top-down view of a sail, or daggerboard.
 
-#image("../Resources/betterairfoildiagram.png")
+#figure(
+  image("../Resources/betterairfoildiagram.png"),
+  caption: [Airfoil Diagram. Adapted from @Kapania2008Modeling.],
+) <airfoil-diagram>
 
-Figure 2: Airfoil Diagram. Adapted from @Kapania2008Modeling.
-
-For the purposes of this paper, we will assume fluids are "perfect" in that they are inviscid, meaning that they have no viscosity, are incompressible such that their density remains constant, are continuous such that they are not made up of discreet particles but rather one fluid continuum, and flow steadily (without changes in their properties over time [10]) in a 2-dimensional field.
+For the purposes of this paper, we will assume fluids are "perfect" in that they are inviscid, meaning that they have no viscosity, are incompressible such that their density remains constant, are continuous such that they are not made up of discreet particles but rather one fluid continuum, and flow steadily (without changes in their properties over time @GERHARDT2011Unsteady) in a 2-dimensional field.
 
 The end goal of this paper is to be able to calculate the sectional lift coefficient of an ILCA 7 sail using the formula
 
@@ -25,7 +26,7 @@ table(
   [$c$], [Chord length]
 ))
 
-This sectional lift coefficient serves as an idealized representation of the ILCA 7 sail [10].
+This sectional lift coefficient serves as an idealized representation of the ILCA 7 sail @GERHARDT2011Unsteady.
 
 To begin, we must mathematically define an airfoil. We will begin to define an airfoil by defining a point on a complex unit circle. To do this, we first take the definition of $e$:
 
@@ -134,43 +135,43 @@ $ arg(z^n) = n arg(z) $
 
 In summary, we have thus far shown that:
 
-$ e^(i x)=lim_(n->infinity)(1+(i x)/n)^n $
-$ |zeta z|=|zeta|dot|z| $
-$ arg(z zeta) = arg(z) + arg(zeta) $
-$ |z^n|=|z|^n $
-$ arg(z^n) = n arg(z) $
+$ e^(i x)=lim_(n->infinity)(1+(i x)/n)^n $ <complex-exponential-limit>
+$ |zeta z|=|zeta|dot|z| $ <modulus-product>
+$ arg(z zeta) = arg(z) + arg(zeta) $ <argument-product>
+$ |z^n|=|z|^n $ <modulus-power>
+$ arg(z^n) = n arg(z) $ <argument-power>
 
-Now let's consider the case that $1+(i x)/n$ from (32) is the complex number $z=a + b i$ where $a=1$ and $b=x/n$. This means
+Now let's consider the case that $1+(i x)/n$ from @complex-exponential-limit is the complex number $z=a + b i$ where $a=1$ and $b=x/n$. This means
 
-$ |1+(i x)/n| = sqrt(1+ (x^2)/(n^2)) $
+$ |1+(i x)/n| = sqrt(1+ (x^2)/(n^2)) $ <increment-modulus>
 
 and
 
-$ tan(arg(1+(i x)/n)) = x/n $
+$ tan(arg(1+(i x)/n)) = x/n $ <increment-argument>
 
-Using (32), (35), and (38):
+Using @complex-exponential-limit, @modulus-power, and @increment-modulus:
 $ |e^(i x)|=lim_(n->infinity)|1+(i x)/n|^n $
 $ |e^(i x)|=lim_(n->infinity)(1+(x^2)/(n^2))^(n/2) $
 $ |e^(i x)|=lim_(n->infinity)(1+(x^2)/(n^2))^((n^2)/(2n)) $
 $ |e^(i x)|=lim_(n->infinity)e^((x^2)/(2n)) $
-$ |e^(i x)|=1 $
+$ |e^(i x)|=1 $ <unit-modulus>
 
 This means that $e^(i x)$ has magnitude 1.
 
-The proof that $lim_(x->0) tan(x)/x =1$ is trivial, so it will be assumed. Using this:
+The proof that $lim_(x->0) tan(x)/x =1$ is trivial, so it will be assumed. Using this and @increment-argument:
 
 $ arg(e^(i x)) = lim_(n->infinity) n arg(1+(i x)/n) $
 $ arg(e^(i x)) = lim_(n->infinity) n arg(1+(i x)/n) tan(arg(1+(i x)/n))/arg(1+(i x)/n) $
 $ arg(e^(i x)) = lim_(n-?infinity) (n x)/n $
-$ arg(e^(i x)) = x $
+$ arg(e^(i x)) = x $ <exponential-argument>
 
-Therefore, using (43) and (47):
+Therefore, using @unit-modulus and @exponential-argument:
 
 $ e^(i x) = cos(x) + i sin(x) $ <euler>
 
 By substituting $x$ for $theta$, we have shown that $z = e^(i theta_z)$ is a point that lies on the complex unit circle.
 
-As $t$ increases from $0$ to $2pi$, (48) traces the circle once counterclockwise. Multiplication by a radius $R>0$ enlarges it and addition of a centre $z_0=h+i k$ translates it:
+As $t$ increases from $0$ to $2pi$, @euler traces the circle once counterclockwise. Multiplication by a radius $R>0$ enlarges it and addition of a centre $z_0=h+i k$ translates it:
 
 $ z(t)=z_0+R e^(i t)=(h+R cos t)+i(k+R sin t), quad 0<=t<=2pi. $ <circle>
 
@@ -178,21 +179,21 @@ To create an airfoil from this complex unit circle, we will use conformal mappin
 
 We previously defined the complex numbers $z = a + i b$ and $zeta = xi + i eta$. Now let's consider these same complex numbers to represent two planes. We will map the plane containing the unit circle $z = a + i b$ to the plane $zeta = xi + i eta$ to transform the unit circle into a foil.
 
-We will begin this by first discussing complex differentiation. A complex function $f(z)$ is differentiable at a point $z_0$ if and only if the following limit difference quotient exists [11]:
+We will begin this by first discussing complex differentiation. A complex function $f(z)$ is differentiable at a point $z_0$ if and only if the following limit difference quotient exists @Campuzano2019Complex:
 
-$ f'(z_0) = lim_(z->z_0) (f(z)-f(z_0))/(z-z_0) $
+$ f'(z_0) = lim_(z->z_0) (f(z)-f(z_0))/(z-z_0) $ <derivative-limit>
 
 Let $Delta z = z-z_0$
 
 $ f'(z_0) = lim_(Delta z->0) (f(z_0+Delta z)-f(z_0))/(Delta z) $ <derivative>
 
-If we drop the subscript from $z_0$ and let $Delta w = f(z_0+Delta z)-f(z_0)$, then $Delta w$ denotes a change in $f(z)$ corresponding to a change in $Delta z$ at the point at which $f$ is evaluated [11]. Therefore:
+If we drop the subscript from $z_0$ and let $Delta w = f(z_0+Delta z)-f(z_0)$, then $Delta w$ denotes a change in $f(z)$ corresponding to a change in $Delta z$ at the point at which $f$ is evaluated @Campuzano2019Complex. Therefore:
 
 $ (d w)/(d z)=lim_(Delta z->0) (Delta w)/(Delta z) $
 
-You might notice that the derivative (49) for a complex-valued function is identical in form to that of a real-valued function. However, for $f'(z_0)$ to exist, the relevant limit must exist independent of the direction from which $z$ approaches $z_0$.
+You might notice that the derivative in @derivative for a complex-valued function is identical in form to that of a real-valued function. However, for $f'(z_0)$ to exist, the relevant limit must exist independent of the direction from which $z$ approaches $z_0$.
 
-Other than this difference, the definition in (49) means that complex numbers can be differentiated using the same rules applied to real numbers. 
+Other than this difference, the definition in @derivative means that complex numbers can be differentiated using the same rules applied to real numbers. 
 
 Complex derivatives are a bit different from real derivatives in that they can be approached from any point on the complex plane (not just by the direction of the function being derivated). An important requirement is that the difference quotient approaches the same value regardless of the direction from which $Delta z$ approaches zero. To see this, let's consider $f(z)=z^2$. Substituting into @derivative gives:
 
@@ -247,11 +248,11 @@ Since distance is nonnegative, maximizing its square gives the same point as max
 
 $ H'(t)=2(xi(t)-2a)xi'(t)+2eta(t)eta'(t) $ <nose-condition>
 
-The coordinate derivatives come from the chain rule:
+The derivatives are found using the chain rule:
 
 $ g'(t)=f'(z(t))z'(t)=(1-a^2/(z(t)^2))i R e^(i t) $
 
-Here, $xi'(t)$ and $eta'(t)$ are the real and imaginary parts of $g'(t)$. Solving $H'(t)=0$ numerically over $0<=t<=2pi$ and comparing the values of $H$ gives the maximum at $t approx 3.226974$. We can then calculate the chord length and its angle $delta$ to the positive $xi$-axis:
+Here, $xi'(t)$ and $eta'(t)$ are the real and imaginary parts of $g'(t)$. Solving $H'(t)=0$ over $0<=t<=2pi$ and comparing the values of $H$ gives the maximum at $t approx 3.226974$. We can then calculate the chord length and its angle $delta$ to the positive $xi$-axis:
 
 $ c=|zeta_T-zeta_L|, quad delta=arg(zeta_T-zeta_L) $
 
@@ -270,7 +271,7 @@ Now that we have defined the airfoil, we must describe the flow around it. I wil
 
 Let $u_z (x,y)$ and $v_z (x,y)$ be the horizontal and vertical components of velocity in the circle plane. Together, these form the velocity vector $bold(V)_z=(u_z,v_z)$. The subscript $z$ identifies the plane in which we are working.
 
-Since the velocity depends on both $x$ and $y$, we need a way to differentiate a function of two variables. We can do this by holding one variable constant while differentiating with respect to the other. This is called partial differentiation. For a function $S(x,y)$:
+Since the velocity depends on both $x$ and $y$, we need a way to differentiate a function of two variables. We can do this by holding one variable constant while differentiating with respect to the other. This is called partial differentiation, and is executed in the same way as regular differentiation. For a function $S(x,y)$:
 
 $ S_x=frac(partial S,partial x)=lim_(epsilon->0)(S(x+epsilon,y)-S(x,y))/epsilon $
 $ S_y=frac(partial S,partial y)=lim_(epsilon->0)(S(x,y+epsilon)-S(x,y))/epsilon $
@@ -296,13 +297,13 @@ To construct a flow with this property, let $phi(x,y)$ be a function whose parti
 
 $ u_z=phi_x, quad v_z=phi_y $ <velocity-potential>
 
-This function is called the velocity potential. We can think of it as an antiderivative for the velocity: differentiating it in the horizontal or vertical direction recovers the corresponding component. Substituting these expressions into @irrotationality gives $phi_(y x)-phi_(x y)=0$, so the flow is irrotational. Substituting them into @incompressibility gives:
+This function is called the velocity potential. We can think of it as an antiderivative for the velocity. Substituting these expressions into @irrotationality gives $phi_(y x)-phi_(x y)=0$, so the flow is irrotational. Substituting them into @incompressibility gives:
 
 $ phi_(x x)+phi_(y y)=0 $ <laplace>
 
-This is Laplace's equation. We therefore need a velocity potential which satisfies this equation and prevents the fluid from passing through the circle.
+We now need a velocity potential which satisfies this equation and prevents the fluid from passing through the circle.
 
-To express the second requirement, we will use a stream function, $psi(x,y)$, defined by:
+To do this, we will use a stream function, $psi(x,y)$, defined by:
 
 $ psi_x=-v_z, quad psi_y=u_z $ <stream-definition>
 
@@ -324,7 +325,7 @@ For these expressions to agree, their real and imaginary parts must be equal:
 
 $ phi_x=psi_y, quad phi_y=-psi_x $ <cauchy-riemann>
 
-These are the Cauchy-Riemann equations. They are satisfied by our definitions of $phi$ and $psi$. With continuous partial derivatives, they also make the derivative agree in every other direction, since:
+These equations are now satisfied by our definitions of $phi$ and $psi$. With continuous partial derivatives, they also make the derivative agree in every other direction, since:
 
 $ d W=(phi_x+i psi_x)d x+(phi_y+i psi_y)d y $
 $ d W=(phi_x+i psi_x)(d x+i d y)=(phi_x+i psi_x)d z $

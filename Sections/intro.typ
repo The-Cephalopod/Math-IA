@@ -28,5 +28,5 @@ align(center,
   #image("../Resources/laserdiagramside.png")
   Figure 1: ILCA 7 Side Profile.
   #linebreak()
-  Adapted from [].],
+  Adapted from @Magnander2023Wind.],
 )))
